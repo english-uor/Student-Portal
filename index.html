@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <!-- STREAMING_CHUNK: Setting up head metadata and viewport parameters... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Students Portal - UoR</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" href="image_0cf63c.png">
+    <link rel="apple-touch-icon" href="image_0cf63c.png">
+    
+    <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Students">
 
-    <!-- STREAMING_CHUNK: Loading styles and icons... -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -22,30 +23,47 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], kurdish: ['system-ui', 'sans-serif'] },
-                    colors: { brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' } }
+                    fontFamily: { 
+                        sans: ['Inter', 'system-ui', 'sans-serif'], 
+                        kurdish: ['system-ui', 'sans-serif'] 
+                    },
+                    colors: { 
+                        brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        /* STREAMING_CHUNK: Custom animations and page transitions... */
         body { -webkit-tap-highlight-color: transparent; transition: background-color 0.4s ease, color 0.4s ease; }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         
-        .frozen-header {
-            position: sticky; top: 0; z-index: 50;
+        .smooth-header {
+            position: relative; z-index: 50;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
-        .dark .frozen-header {
+        .dark .smooth-header {
             background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(167, 139, 250, 0.08) 0px, transparent 50%);
+        }
+        .dark .mesh-bg {
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.04) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(167, 139, 250, 0.04) 0px, transparent 50%);
         }
 
         .student-card {
@@ -58,19 +76,7 @@
         }
         .student-card:hover { transform: translateY(-4px); }
         .disabled-card { opacity: 0.4; filter: grayscale(100%); pointer-events: none; }
-
-        .mesh-bg {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            background-image: 
-                radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
-                radial-gradient(at 90% 80%, rgba(167, 139, 250, 0.12) 0px, transparent 50%);
-        }
-        .dark .mesh-bg {
-            background-image: 
-                radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.04) 0px, transparent 50%),
-                radial-gradient(at 90% 80%, rgba(167, 139, 250, 0.04) 0px, transparent 50%);
-        }
-
+        
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
@@ -85,15 +91,14 @@
 <body class="min-h-screen flex flex-col pb-12 antialiased relative bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100">
     <div class="mesh-bg"></div>
 
-    <!-- STREAMING_CHUNK: Setting up App Installation prompts and warning system... -->
     <!-- 1. In-App Browser Blocker -->
-    <div id="in-app-warning" class="fixed inset-0 z-[999] hidden flex-col items-center justify-center bg-white dark:bg-slate-900 text-center px-6">
-        <div class="w-20 h-20 bg-rose-100 dark:bg-rose-500/20 rounded-[2rem] flex items-center justify-center mb-6 animate-pulse shadow-xl">
-            <i data-lucide="smartphone" class="w-10 h-10 text-rose-500"></i>
+    <div id="in-app-warning" class="fixed inset-0 z-[999] hidden flex-col items-center justify-center bg-slate-900 text-center px-6">
+        <div class="w-20 h-20 bg-rose-500/20 rounded-[2rem] flex items-center justify-center mb-6 animate-pulse">
+            <i data-lucide="compass" class="w-10 h-10 text-rose-500"></i>
         </div>
-        <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">Open Standard Browser</h2>
-        <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-md">You are inside an in-app browser which blocks application installation. Please open this page in Safari or Chrome.</p>
-        <div class="px-6 py-3 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-sm font-mono break-all text-brand-600 dark:text-brand-400 select-all">
+        <h2 class="text-2xl font-bold text-white mb-4">Open Standard Browser</h2>
+        <p class="text-slate-300 mb-8 max-w-md">You are inside an in-app browser which blocks application installation. Please open this page in Safari or Chrome.</p>
+        <div class="px-6 py-3 bg-slate-800 rounded-2xl border border-slate-700 text-sm font-mono break-all text-brand-400 select-all">
             english-uor.github.io/students
         </div>
     </div>
@@ -104,19 +109,18 @@
             <button onclick="dismissIOSPrompt()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
-            <div class="w-14 h-14 bg-gradient-to-tr from-brand-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/30 mb-5">
-                <i data-lucide="download-cloud" class="w-7 h-7 text-white"></i>
+            <div class="w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/30 mb-5">
+                <img src="image_0cf63c.png" alt="Icon" class="w-7 h-7 object-cover rounded-xl" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%230284c7\' stroke-width=\'2\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'">
             </div>
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Install Students Portal</h3>
             <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Install this app on your device for high performance fullscreen mode.</p>
             <div class="space-y-4 text-sm font-medium text-slate-600 dark:text-slate-300">
                 <div class="flex items-center gap-3"><i data-lucide="share" class="w-5 h-5 text-brand-500"></i> 1. Tap the Share button below</div>
-                <div class="flex items-center gap-3"><i data-lucide="plus-square" class="w-5 h-5 text-indigo-500"></i> 2. Select "Add to Home Screen"</div>
+                <div class="flex items-center gap-3"><i data-lucide="plus-square" class="w-5 h-5 text-gold-500"></i> 2. Select "Add to Home Screen"</div>
             </div>
         </div>
     </div>
 
-    <!-- STREAMING_CHUNK: Creating Modals and Notifications templates... -->
     <!-- QR Scanner Modal -->
     <div id="qr-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/95 backdrop-blur-lg flex-col items-center justify-center p-4">
         <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col">
@@ -138,6 +142,21 @@
         </div>
     </div>
 
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/80 backdrop-blur-lg flex-col items-center justify-center p-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-sm w-full shadow-2xl animate-pop">
+            <div class="flex justify-between items-center mb-6">
+                <div class="w-12 h-12 bg-rose-500/10 dark:bg-rose-500/20 rounded-xl flex items-center justify-center"><i data-lucide="shield-alert" class="w-6 h-6 text-rose-500"></i></div>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Admin Security Panel</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 font-medium">Please enter PIN to modify app states.</p>
+            <input type="password" id="admin-pin" placeholder="••••" class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:border-brand-500 text-center text-xl tracking-[0.5em] font-mono mb-4">
+            <button onclick="verifyAdmin()" class="w-full bg-brand-500 text-white font-bold py-3 rounded-xl hover:bg-brand-600 transition-colors">Authenticate</button>
+            <p id="admin-error" class="text-rose-500 text-sm text-center mt-3 hidden">Incorrect Access PIN</p>
+        </div>
+    </div>
+
     <!-- Message Toast -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 hidden">
         <div class="bg-slate-800 border border-slate-700 text-white px-6 py-3.5 rounded-full shadow-2xl flex items-center gap-3 font-semibold text-sm">
@@ -145,8 +164,7 @@
         </div>
     </div>
 
-    <!-- STREAMING_CHUNK: Designing the Frozen sticky Header bar... -->
-    <header class="frozen-header pt-safe pb-4 px-4">
+    <header class="smooth-header pt-safe pb-4 px-4">
         <!-- Top marquee bar -->
         <div class="w-full bg-brand-500/10 dark:bg-brand-500/20 text-[11px] font-semibold text-brand-600 dark:text-brand-400 py-1.5 px-4 rounded-full max-w-5xl mx-auto mb-3 marquee-container shadow-inner flex items-center">
             <div class="marquee-content font-bold">
@@ -158,8 +176,8 @@
             <!-- App Identity & Controllers -->
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-gradient-to-tr from-brand-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white">
-                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    <div class="w-11 h-11 bg-gradient-to-tr from-brand-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white overflow-hidden">
+                        <img src="image_0cf63c.png" alt="Hub Logo" class="w-full h-full object-cover rounded-xl" onerror="this.outerHTML='<i data-lucide=\'graduation-cap\' class=\'w-6 h-6 text-white\'></i>'">
                     </div>
                     <div>
                         <h1 class="text-[16px] font-black text-slate-800 dark:text-white leading-tight">Students Hub</h1>
@@ -238,8 +256,16 @@
         </div>
     </header>
 
-    <!-- STREAMING_CHUNK: Setting up Page Body layout components... -->
     <main class="flex-grow max-w-5xl mx-auto w-full px-4 pt-6 pb-20">
+        <!-- Admin Alert Block -->
+        <div id="admin-banner" class="hidden mb-6 bg-rose-500/10 border border-rose-500/20 dark:border-rose-500/30 rounded-2xl p-4 flex justify-between items-center animate-pop">
+            <div class="flex items-center gap-3 text-rose-500">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+                <span class="text-sm font-bold tracking-wide">Administrator Controls Unlocked</span>
+            </div>
+            <button onclick="exitAdmin()" class="text-xs bg-slate-900 dark:bg-slate-800 text-white px-3 py-1.5 rounded-xl hover:opacity-80">Lock</button>
+        </div>
+
         <!-- Favorites Shelf -->
         <div id="fav-section" class="hidden mb-8">
             <h2 class="text-xs font-black uppercase text-amber-500 dark:text-amber-400 tracking-widest flex items-center gap-2 mb-4">
@@ -250,25 +276,31 @@
 
         <!-- Apps List Grid -->
         <h2 class="text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest flex items-center gap-2 mb-4">
-            <i data-lucide="grid" class="w-4 h-4"></i> Student Services / خزمەتگوزارییەکان
+            <i data-lucide="grid" class="w-4 h-4"></i> Department Services / خزمەتگوزارییەکان
         </h2>
         <div id="apps-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </main>
 
-    <!-- Footer Area -->
+    <!-- Footer Security Pad Trigger -->
     <footer class="mt-auto py-8 border-t border-slate-200/50 dark:border-slate-900 text-center flex flex-col items-center">
+        <button onclick="document.getElementById('admin-modal').style.display='flex'" class="mb-4 w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:scale-110 transition-all border border-slate-200 dark:border-slate-800">
+            <i data-lucide="lock" class="w-5 h-5"></i>
+        </button>
         <p class="text-xs text-slate-400 dark:text-slate-500 font-bold">© 2026 UoR English Department Portal • Students Edition</p>
     </footer>
 
-    <!-- STREAMING_CHUNK: Initializing logic core, weather fetches, and theme states... -->
     <script>
         const appsData = [
-            { id: 1, titleEn: "Student Portal", titleKu: "پۆرتاڵی خوێندکاران", desc: "Access graded reports, overall averages, registration profiles, and schedules.", icon: "user", url: "https://english-uor.github.io/Students-V1/" },
-            { id: 2, titleEn: "Research Library", titleKu: "کتێبخانەی توێژینەوە", desc: "Review digital archives, department recommended papers, and course guides.", icon: "library", url: "https://english-uor.github.io/Library/" },
-            { id: 3, titleEn: "Topic Selection", titleKu: "دیاریکردنی بابەتەکان", desc: "Senior module to choose, evaluate, and assign graduation research topics.", icon: "list-checks", url: "https://english-uor.github.io/Topic-distribution/" },
-            { id: 4, titleEn: "Holidays & Occasions", titleKu: "پشوو و بۆنەکان", desc: "Calendar view of official regional, academic, and holiday closures.", icon: "calendar-days", url: "holidays.html" },
-            { id: 5, titleEn: "ECTS Calculator", titleKu: "هەژمارکەری ECTS", desc: "Calculate overall semester credit weightings and grade conversions.", icon: "calculator", url: "https://english-uor.github.io/ECTS-Calculator/" },
-            { id: 6, titleEn: "Schedules & Exams", titleKu: "خشتە و تاقیکردنەوەکان", desc: "Check class timings, midterms, and final exam schedules.", icon: "calendar-clock", url: "https://english-uor.github.io/schedule-calendar-exam/" }
+            { id: 1, titleEn: "Student Portal", titleKu: "پۆرتاڵی خوێندکاران", desc: "Grade averages, attendance review, schedules, and registry profiles.", icon: "user", url: "https://english-uor.github.io/Students-V1/" },
+            { id: 2, titleEn: "Research Library", titleKu: "کتێبخانەی توێژینەوە", desc: "Review academic research archives, department textbooks, and guides.", icon: "library", url: "https://english-uor.github.io/Library/" },
+            { id: 3, titleEn: "Topic Selection", titleKu: "دیاریکردنی بابەتەکان", desc: "Allows senior students to select and apply for graduation research topics.", icon: "list-checks", url: "https://english-uor.github.io/Topic-distribution/" },
+            { id: 4, titleEn: "Holidays & Occasions", titleKu: "پشوو و بۆنەکان", desc: "Department academic calendar milestones, regional days, and official holidays.", icon: "calendar-days", url: "holidays.html" },
+            { id: 5, titleEn: "ECTS Calculator", titleKu: "هەژمارکەری ECTS", desc: "Advanced grade weights calculator supporting ECTS credit calculations.", icon: "calculator", url: "https://english-uor.github.io/ECTS-Calculator/" },
+            { id: 6, titleEn: "Schedules & Exams", titleKu: "خشتە و تاقیکردنەوەکان", desc: "Weekly class agendas, midterm timelines, and final exam details.", icon: "calendar-clock", url: "https://english-uor.github.io/schedule-calendar-exam/" },
+            { id: 7, titleEn: "Forms Center", titleKu: "فۆڕمەکان", desc: "Download department request drafts, graduation rules, and files.", icon: "file-text", url: "https://english-uor.github.io/Forms/" },
+            { id: 8, titleEn: "Trainer Evaluation", titleKu: "هەڵسەنگاندنی ڕاهێنەران", desc: "Feedback system for instructional training courses and tutor grading.", icon: "award", url: "https://english-uor.github.io/Training/" },
+            { id: 9, titleEn: "Statistics Portal", titleKu: "پۆرتاڵی ئامارەکان", desc: "Graphical dashboard representing department growth metrics and chart metrics.", icon: "bar-chart-3", url: "https://english-uor.github.io/statistics/" },
+            { id: 10, titleEn: "English General Info", titleKu: "زانیاری گشتی", desc: "Contact registries, directory of the department staff and locations.", icon: "info", url: "https://english-uor.github.io/RegistryV2/" }
         ];
 
         // Color configurations mapping
@@ -319,10 +351,11 @@
 
         const defaultThemes = ['blue', 'emerald', 'purple', 'rose', 'amber', 'cyan'];
 
+        let isAdmin = sessionStorage.getItem('isAdmin_student') === 'true';
+        let disabledApps = JSON.parse(localStorage.getItem('student_disabled_apps') || '[]');
         let pinnedApps = JSON.parse(localStorage.getItem('student_pinned_apps') || '[]');
         let html5QrcodeScanner = null;
 
-        /* STREAMING_CHUNK: Handling Application lifecycle events and sw registration... */
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
             lucide.createIcons();
@@ -341,7 +374,6 @@
             }
         }
 
-        // --- Dynamic Customizations Theme Logic ---
         function getAppColorTheme(appId, index) {
             let selectedColor = localStorage.getItem(`student_app_color_${appId}`);
             if (!selectedColor) {
@@ -370,10 +402,9 @@
             renderApps();
         }
 
-        /* STREAMING_CHUNK: Fetching real-time 3-day weather from telemetry metrics... */
         async function fetchWeather() {
             try {
-                // Fetching telemetry statistics for Ranya Coordinate: 36.2551, 44.8824
+                // Fetching daily maximum temperature forecasts for Ranya, Iraq coordinates: latitude 36.2551, longitude 44.8824
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.2551&longitude=44.8824&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto");
                 if(!res.ok) throw new Error("API call blocked or failed");
                 const data = await res.json();
@@ -390,7 +421,6 @@
                     return "cloud-lightning";
                 }
 
-                // Days calculation
                 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                 const now = new Date();
                 
@@ -398,7 +428,7 @@
                     const tempAvg = Math.round((tempsMax[i] + tempsMin[i]) / 2);
                     const iconName = getWeatherIcon(weatherCodes[i]);
                     
-                    document.getElementById(`weather-temp-${i}`).textContent = `${tempAvg}°C`;
+                    document.getElementById(`weather-temp-${i}`).textContent = `${tempAvg}°`;
                     const iconEl = document.getElementById(`weather-icon-${i}`);
                     if(iconEl) iconEl.setAttribute('data-lucide', iconName);
 
@@ -411,20 +441,40 @@
                 }
                 lucide.createIcons();
             } catch(e) {
-                // Fallbacks in case rate limit or network is disconnected
-                document.getElementById('weather-temp-0').textContent = "28°";
-                document.getElementById('weather-temp-1').textContent = "29°";
-                document.getElementById('weather-temp-2').textContent = "27°";
+                // Summer peak fallbacks for Ranya
+                document.getElementById('weather-temp-0').textContent = "43°";
+                document.getElementById('weather-temp-1').textContent = "44°";
+                document.getElementById('weather-temp-2').textContent = "42°";
             }
         }
 
-        /* STREAMING_CHUNK: Running live clock updates with seconds count... */
+        function getKurdishSolarDate(date) {
+            const year = date.getFullYear(); const month = date.getMonth() + 1; const day = date.getDate();
+            const kurdishMonths = ["خاکەلێوە", "بانەمەڕ", "جۆزەردان", "پووشپەڕ", "گەلاوێژ", "خەرمانان", "ڕەزبەر", "گەڵاڕێزان", "سەرماوەز", "بەفرانبار", "ڕێبەندان", "ڕەشەمێ"];
+            const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+            const gregDays = [0, 31, isLeap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            let daysSinceJan1 = 0; for(let i = 1; i < month; i++) daysSinceJan1 += gregDays[i]; daysSinceJan1 += day;
+            const march21Day = 31 + (isLeap ? 29 : 28) + 21; let kurdishYear = year + 700; let daysIntoKurdishYear = daysSinceJan1 - march21Day + 1;
+            if (daysIntoKurdishYear <= 0) {
+                kurdishYear -= 1;
+                const prevYearLeap = ((year-1) % 4 === 0 && (year-1) % 100 !== 0) || ((year-1) % 400 === 0);
+                daysIntoKurdishYear += prevYearLeap ? 366 : 365;
+            }
+            let kMonth = 0; let kDay = daysIntoKurdishYear;
+            for (let i = 0; i < 12; i++) {
+                let mDays = i < 6 ? 31 : 30; if (i === 11) mDays = isLeap ? 30 : 29;
+                if (kDay <= mDays) { kMonth = i; break; }
+                kDay -= mDays;
+            }
+            const toKurdishNumerals = (num) => String(num).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+            return `${toKurdishNumerals(kDay)}ی ${kurdishMonths[kMonth]}ی ${toKurdishNumerals(kurdishYear)}`;
+        }
+
         function initClock() {
             function update() {
                 const now = new Date();
-                // Tick with seconds added explicitly: HH:MM:SS AM/PM
                 document.getElementById('live-time').innerText = now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second: '2-digit', hour12:true});
-                document.getElementById('live-date').innerText = now.toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+                document.getElementById('live-date').innerText = now.toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) + " / " + getKurdishSolarDate(now);
                 
                 const kurdishDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
                 const englishDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -435,7 +485,6 @@
             setInterval(update, 1000); update();
         }
 
-        // --- Adaptive Installation Mechanics ---
         function checkPWAStatus() {
             const ua = navigator.userAgent || navigator.vendor || window.opera;
             const isInApp = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1) || (ua.indexOf("Snapchat") > -1) || (ua.indexOf("Line") > -1);
@@ -478,9 +527,9 @@
             deferredPrompt = null;
         }
 
-        /* STREAMING_CHUNK: Building application rendering elements ... */
         function buildCardHtml(app, idx, theme) {
             const numStr = (idx + 1).toString().padStart(2, '0');
+            const isDisabled = disabledApps.includes(app.id);
             const isPinned = pinnedApps.includes(app.id);
             
             let colorChoicesHtml = '';
@@ -488,8 +537,22 @@
                 colorChoicesHtml += `<button onclick="setAppColor(${app.id}, '${cName}', event)" class="w-4 h-4 rounded-full bg-${cName === 'emerald' ? 'emerald-500' : cName + '-500'} hover:scale-125 transition-transform" title="${cName}"></button>`;
             });
 
+            let adminControls = '';
+            if (isAdmin) {
+                adminControls = `
+                    <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] font-black ${isDisabled ? 'text-rose-500' : 'text-emerald-500'}">${isDisabled ? 'DISABLED' : 'ONLINE'}</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" ${!isDisabled ? 'checked' : ''} onchange="toggleAppState(${app.id})">
+                            <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                        </label>
+                    </div>`;
+            }
+
+            const clickAction = (isDisabled && !isAdmin) ? `onclick="showToast('Temporarily offline.')"` : `onclick="window.open('${app.url}', '_blank')"`;
+
             return `
-                <div class="student-card p-5 border shadow-sm flex flex-col justify-between animate-pop ${theme.border} ${theme.bg}">
+                <div class="student-card p-5 border shadow-sm flex flex-col justify-between animate-pop ${theme.border} ${theme.bg} ${isDisabled && !isAdmin ? 'disabled-card' : ''}">
                     <div>
                         <div class="flex justify-between items-start">
                             <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md shrink-0 ${theme.iconBox}">
@@ -503,7 +566,7 @@
                             </div>
                         </div>
 
-                        <div class="mt-4 cursor-pointer" onclick="window.open('${app.url}', '_blank')">
+                        <div class="mt-4 cursor-pointer" ${clickAction}>
                             <h3 class="text-[17px] font-black text-slate-800 dark:text-white leading-tight">${app.titleEn}</h3>
                             <h4 class="text-xs font-bold text-slate-400 mt-1 font-kurdish leading-tight" dir="rtl">${app.titleKu}</h4>
                             <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2.5 font-medium leading-relaxed">${app.desc}</p>
@@ -525,6 +588,7 @@
                             </button>
                         </div>
                     </div>
+                    ${adminControls}
                 </div>
             `;
         }
@@ -551,6 +615,7 @@
             });
 
             favSection.style.display = hasFavs ? 'block' : 'none';
+            document.getElementById('admin-banner').style.display = isAdmin ? 'flex' : 'none';
             lucide.createIcons();
         }
 
@@ -573,7 +638,41 @@
             }
         }
 
-        /* STREAMING_CHUNK: Custom QR code dynamic generation systems... */
+        // --- Admin Controls Protocol ---
+        function closeAdminModal() { document.getElementById('admin-modal').style.display = 'none'; document.getElementById('admin-pin').value = ''; }
+        
+        async function verifyAdmin() {
+            const pinInput = document.getElementById('admin-pin').value;
+            try {
+                const response = await fetch('./admin-config.json').catch(() => null); 
+                let correctPin = "2026"; 
+                if(response && response.ok) {
+                    const data = await response.json();
+                    correctPin = data.adminPin;
+                }
+                if (pinInput === correctPin) {
+                    sessionStorage.setItem('isAdmin_student', 'true');
+                    isAdmin = true;
+                    closeAdminModal();
+                    showToast("Administrator authentication complete.");
+                    renderApps();
+                } else {
+                    document.getElementById('admin-error').style.display = 'block';
+                }
+            } catch (e) {
+                document.getElementById('admin-error').style.display = 'block';
+            }
+        }
+
+        function exitAdmin() { sessionStorage.removeItem('isAdmin_student'); isAdmin = false; renderApps(); showToast("Administrator console locked."); }
+
+        function toggleAppState(id) {
+            if (disabledApps.includes(id)) { disabledApps = disabledApps.filter(appId => appId !== id); } 
+            else { disabledApps.push(id); }
+            localStorage.setItem('student_disabled_apps', JSON.stringify(disabledApps));
+            renderApps();
+        }
+
         function generateQR(title, url, event) {
             if(event) event.stopPropagation();
             document.getElementById('qr-app-title').innerText = title;
@@ -618,3 +717,4 @@
     </script>
 </body>
 </html>
+```eor
