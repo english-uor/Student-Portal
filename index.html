@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <!-- STREAMING_CHUNK: Setting up head metadata and viewport parameters... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Students Portal - UoR</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Students">
+
+    <!-- STREAMING_CHUNK: Loading styles and icons... -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], kurdish: ['system-ui', 'sans-serif'] },
+                    colors: { brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' } }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* STREAMING_CHUNK: Custom animations and page transitions... */
+        body { -webkit-tap-highlight-color: transparent; transition: background-color 0.4s ease, color 0.4s ease; }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        .frozen-header {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+        .dark .frozen-header {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .student-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 2rem;
+            transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .dark .student-card {
+            background: rgba(30, 41, 59, 0.45);
+        }
+        .student-card:hover { transform: translateY(-4px); }
+        .disabled-card { opacity: 0.4; filter: grayscale(100%); pointer-events: none; }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(167, 139, 250, 0.12) 0px, transparent 50%);
+        }
+        .dark .mesh-bg {
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.04) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(167, 139, 250, 0.04) 0px, transparent 50%);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: marquee 22s linear infinite; }
+
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .animate-pop { animation: popIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-12 antialiased relative bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100">
+    <div class="mesh-bg"></div>
+
+    <!-- STREAMING_CHUNK: Setting up App Installation prompts and warning system... -->
+    <!-- 1. In-App Browser Blocker -->
+    <div id="in-app-warning" class="fixed inset-0 z-[999] hidden flex-col items-center justify-center bg-white dark:bg-slate-900 text-center px-6">
+        <div class="w-20 h-20 bg-rose-100 dark:bg-rose-500/20 rounded-[2rem] flex items-center justify-center mb-6 animate-pulse shadow-xl">
+            <i data-lucide="smartphone" class="w-10 h-10 text-rose-500"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">Open Standard Browser</h2>
+        <p class="text-slate-500 dark:text-slate-400 mb-8 max-w-md">You are inside an in-app browser which blocks application installation. Please open this page in Safari or Chrome.</p>
+        <div class="px-6 py-3 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-sm font-mono break-all text-brand-600 dark:text-brand-400 select-all">
+            english-uor.github.io/students
+        </div>
+    </div>
+
+    <!-- 2. iOS Install Prompt -->
+    <div id="ios-install-overlay" class="fixed inset-0 z-[998] hidden flex-col items-center justify-end bg-slate-950/80 backdrop-blur-md pb-10 px-6">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-sm w-full animate-pop relative">
+            <button onclick="dismissIOSPrompt()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="w-14 h-14 bg-gradient-to-tr from-brand-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/30 mb-5">
+                <i data-lucide="download-cloud" class="w-7 h-7 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Install Students Portal</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Install this app on your device for high performance fullscreen mode.</p>
+            <div class="space-y-4 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <div class="flex items-center gap-3"><i data-lucide="share" class="w-5 h-5 text-brand-500"></i> 1. Tap the Share button below</div>
+                <div class="flex items-center gap-3"><i data-lucide="plus-square" class="w-5 h-5 text-indigo-500"></i> 2. Select "Add to Home Screen"</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STREAMING_CHUNK: Creating Modals and Notifications templates... -->
+    <!-- QR Scanner Modal -->
+    <div id="qr-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/95 backdrop-blur-lg flex-col items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2"><i data-lucide="scan" class="w-5 h-5 text-brand-500"></i> QR Scanner</h3>
+                <button onclick="closeQRModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-full p-1.5"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="reader" class="w-full bg-black min-h-[300px]"></div>
+        </div>
+    </div>
+
+    <!-- Show QR Code Modal -->
+    <div id="show-qr-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/80 backdrop-blur-lg flex-col items-center justify-center p-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 max-w-sm w-full text-center relative shadow-2xl animate-pop">
+            <button onclick="closeShowQRModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 rounded-full p-1.5"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 id="qr-app-title" class="font-bold text-slate-800 dark:text-white text-lg mb-6">App Link</h3>
+            <img id="qr-image" src="" alt="QR Code" class="w-48 h-48 mx-auto mb-6 border-4 border-slate-100 dark:border-slate-800 rounded-2xl shadow-md">
+            <p class="text-xs text-slate-400 font-medium">Scan with any camera to launch instantly</p>
+        </div>
+    </div>
+
+    <!-- Message Toast -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 hidden">
+        <div class="bg-slate-800 border border-slate-700 text-white px-6 py-3.5 rounded-full shadow-2xl flex items-center gap-3 font-semibold text-sm">
+            <i data-lucide="info" class="w-5 h-5 text-brand-400"></i><span id="toast-msg">Notification</span>
+        </div>
+    </div>
+
+    <!-- STREAMING_CHUNK: Designing the Frozen sticky Header bar... -->
+    <header class="frozen-header pt-safe pb-4 px-4">
+        <!-- Top marquee bar -->
+        <div class="w-full bg-brand-500/10 dark:bg-brand-500/20 text-[11px] font-semibold text-brand-600 dark:text-brand-400 py-1.5 px-4 rounded-full max-w-5xl mx-auto mb-3 marquee-container shadow-inner flex items-center">
+            <div class="marquee-content font-bold">
+                ✨ Welcome to University of Raparin, English Language Department Portal • Stay Connected! • زانکۆی ڕاپەڕین - بەشی زمانی ئینگلیزی ✨
+            </div>
+        </div>
+
+        <div class="max-w-5xl mx-auto flex flex-col gap-3">
+            <!-- App Identity & Controllers -->
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 bg-gradient-to-tr from-brand-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-[16px] font-black text-slate-800 dark:text-white leading-tight">Students Hub</h1>
+                        <h2 class="text-[10px] text-slate-400 uppercase tracking-widest font-black">UoR English</h2>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button id="android-install-btn" onclick="installAndroid()" class="hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-black px-4 py-2.5 rounded-xl shadow-lg items-center gap-2 active:scale-95 transition-all">
+                        <i data-lucide="download" class="w-4 h-4 text-brand-400"></i> Install
+                    </button>
+                    <button onclick="toggleTheme()" class="w-11 h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 dark:text-slate-300 shadow-sm active:scale-95 transition-all">
+                        <i data-lucide="moon" class="hidden dark:block w-5 h-5"></i>
+                        <i data-lucide="sun" class="block dark:hidden w-5 h-5"></i>
+                    </button>
+                    <button onclick="openQRScanner()" class="w-11 h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 dark:text-slate-300 shadow-sm active:scale-95 transition-all">
+                        <i data-lucide="scan" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Header Telemetry Row -->
+            <div class="bg-white/80 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-3 shadow-sm">
+                <!-- Date, Day EN/KU & Location -->
+                <div class="flex flex-col gap-0.5">
+                    <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                        <i data-lucide="calendar" class="w-4 h-4 text-brand-500"></i>
+                        <span id="live-date">Loading Date...</span>
+                    </div>
+                    <div class="text-[11px] text-slate-400 dark:text-slate-500 font-black tracking-wide pl-6">
+                        <span id="ku-day-label">باردەکرێت...</span> / <span id="en-day-label">...</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 pl-6 mt-0.5 text-[11px] font-black text-slate-500 dark:text-slate-400">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i>
+                        <span>Ranya - Kurdistan</span>
+                    </div>
+                </div>
+
+                <!-- Live Clock & Dynamic 3-Day Weather Panel -->
+                <div class="flex items-center gap-3 flex-wrap">
+                    <!-- Real-Time Ranya Weather Dashboard -->
+                    <div class="bg-slate-100 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 px-3 py-1.5 rounded-xl flex items-center gap-2.5 shadow-inner">
+                        <!-- Today -->
+                        <div class="flex flex-col items-center border-r border-slate-200 dark:border-slate-800/80 pr-2">
+                            <span class="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase">Today</span>
+                            <div class="flex items-center gap-0.5 mt-0.5">
+                                <i id="weather-icon-0" data-lucide="cloud-sun" class="w-3.5 h-3.5 text-amber-500"></i>
+                                <span id="weather-temp-0" class="text-[10px] font-black text-slate-800 dark:text-white">--°</span>
+                            </div>
+                        </div>
+                        <!-- Tomorrow -->
+                        <div class="flex flex-col items-center border-r border-slate-200 dark:border-slate-800/80 px-2">
+                            <span id="weather-day-1" class="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase">Tomorrow</span>
+                            <div class="flex items-center gap-0.5 mt-0.5">
+                                <i id="weather-icon-1" data-lucide="cloud-sun" class="w-3.5 h-3.5 text-amber-500"></i>
+                                <span id="weather-temp-1" class="text-[10px] font-black text-slate-800 dark:text-white">--°</span>
+                            </div>
+                        </div>
+                        <!-- Day After Tomorrow -->
+                        <div class="flex flex-col items-center pl-1.5">
+                            <span id="weather-day-2" class="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase">Day After</span>
+                            <div class="flex items-center gap-0.5 mt-0.5">
+                                <i id="weather-icon-2" data-lucide="cloud-sun" class="w-3.5 h-3.5 text-amber-500"></i>
+                                <span id="weather-temp-2" class="text-[10px] font-black text-slate-800 dark:text-white">--°</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Clock ticking with SECONDS -->
+                    <div class="bg-slate-100 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-inner">
+                        <i data-lucide="clock" class="w-4 h-4 text-brand-500"></i>
+                        <span id="live-time" class="font-mono text-xs sm:text-sm font-black text-slate-800 dark:text-white tracking-widest">00:00:00 AM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- STREAMING_CHUNK: Setting up Page Body layout components... -->
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 pt-6 pb-20">
+        <!-- Favorites Shelf -->
+        <div id="fav-section" class="hidden mb-8">
+            <h2 class="text-xs font-black uppercase text-amber-500 dark:text-amber-400 tracking-widest flex items-center gap-2 mb-4">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i> Pinned Favorites / دڵخوازەکان
+            </h2>
+            <div id="favorites-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- Apps List Grid -->
+        <h2 class="text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest flex items-center gap-2 mb-4">
+            <i data-lucide="grid" class="w-4 h-4"></i> Student Services / خزمەتگوزارییەکان
+        </h2>
+        <div id="apps-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </main>
+
+    <!-- Footer Area -->
+    <footer class="mt-auto py-8 border-t border-slate-200/50 dark:border-slate-900 text-center flex flex-col items-center">
+        <p class="text-xs text-slate-400 dark:text-slate-500 font-bold">© 2026 UoR English Department Portal • Students Edition</p>
+    </footer>
+
+    <!-- STREAMING_CHUNK: Initializing logic core, weather fetches, and theme states... -->
+    <script>
+        const appsData = [
+            { id: 1, titleEn: "Student Portal", titleKu: "پۆرتاڵی خوێندکاران", desc: "Access graded reports, overall averages, registration profiles, and schedules.", icon: "user", url: "https://english-uor.github.io/Students-V1/" },
+            { id: 2, titleEn: "Research Library", titleKu: "کتێبخانەی توێژینەوە", desc: "Review digital archives, department recommended papers, and course guides.", icon: "library", url: "https://english-uor.github.io/Library/" },
+            { id: 3, titleEn: "Topic Selection", titleKu: "دیاریکردنی بابەتەکان", desc: "Senior module to choose, evaluate, and assign graduation research topics.", icon: "list-checks", url: "https://english-uor.github.io/Topic-distribution/" },
+            { id: 4, titleEn: "Holidays & Occasions", titleKu: "پشوو و بۆنەکان", desc: "Calendar view of official regional, academic, and holiday closures.", icon: "calendar-days", url: "holidays.html" },
+            { id: 5, titleEn: "ECTS Calculator", titleKu: "هەژمارکەری ECTS", desc: "Calculate overall semester credit weightings and grade conversions.", icon: "calculator", url: "https://english-uor.github.io/ECTS-Calculator/" },
+            { id: 6, titleEn: "Schedules & Exams", titleKu: "خشتە و تاقیکردنەوەکان", desc: "Check class timings, midterms, and final exam schedules.", icon: "calendar-clock", url: "https://english-uor.github.io/schedule-calendar-exam/" }
+        ];
+
+        // Color configurations mapping
+        const colorThemes = {
+            blue: {
+                bg: "bg-blue-50/50 dark:bg-blue-950/20 hover:bg-blue-50 dark:hover:bg-blue-950/30",
+                border: "border-blue-200 dark:border-blue-900/50 hover:border-blue-500",
+                iconBox: "bg-blue-100/50 dark:bg-blue-900/50 border-blue-200 dark:border-blue-800",
+                icon: "text-blue-500 dark:text-blue-400",
+                btnText: "text-blue-600 dark:text-blue-400"
+            },
+            emerald: {
+                bg: "bg-emerald-50/50 dark:bg-emerald-950/20 hover:bg-emerald-50 dark:hover:bg-emerald-950/30",
+                border: "border-emerald-200 dark:border-emerald-900/50 hover:border-emerald-500",
+                iconBox: "bg-emerald-100/50 dark:bg-emerald-900/50 border-emerald-200 dark:border-emerald-800",
+                icon: "text-emerald-500 dark:text-emerald-400",
+                btnText: "text-emerald-600 dark:text-emerald-400"
+            },
+            purple: {
+                bg: "bg-purple-50/50 dark:bg-purple-950/20 hover:bg-purple-50 dark:hover:bg-purple-950/30",
+                border: "border-purple-200 dark:border-purple-900/50 hover:border-purple-500",
+                iconBox: "bg-purple-100/50 dark:bg-purple-900/50 border-purple-200 dark:border-purple-800",
+                icon: "text-purple-500 dark:text-purple-400",
+                btnText: "text-purple-600 dark:text-purple-400"
+            },
+            rose: {
+                bg: "bg-rose-50/50 dark:bg-rose-950/20 hover:bg-rose-50 dark:hover:bg-rose-950/30",
+                border: "border-rose-200 dark:border-rose-900/50 hover:border-rose-500",
+                iconBox: "bg-rose-100/50 dark:bg-rose-900/50 border-rose-200 dark:border-rose-800",
+                icon: "text-rose-500 dark:text-rose-400",
+                btnText: "text-rose-600 dark:text-rose-400"
+            },
+            amber: {
+                bg: "bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-50 dark:hover:bg-amber-950/30",
+                border: "border-amber-200 dark:border-amber-900/50 hover:border-amber-500",
+                iconBox: "bg-amber-100/50 dark:bg-amber-900/50 border-amber-200 dark:border-amber-800",
+                icon: "text-amber-500 dark:text-amber-400",
+                btnText: "text-amber-600 dark:text-amber-400"
+            },
+            cyan: {
+                bg: "bg-cyan-50/50 dark:bg-cyan-950/20 hover:bg-cyan-50 dark:hover:bg-cyan-950/30",
+                border: "border-cyan-200 dark:border-cyan-900/50 hover:border-cyan-500",
+                iconBox: "bg-cyan-100/50 dark:bg-cyan-900/50 border-cyan-200 dark:border-cyan-800",
+                icon: "text-cyan-500 dark:text-cyan-400",
+                btnText: "text-cyan-600 dark:text-cyan-400"
+            }
+        };
+
+        const defaultThemes = ['blue', 'emerald', 'purple', 'rose', 'amber', 'cyan'];
+
+        let pinnedApps = JSON.parse(localStorage.getItem('student_pinned_apps') || '[]');
+        let html5QrcodeScanner = null;
+
+        /* STREAMING_CHUNK: Handling Application lifecycle events and sw registration... */
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            lucide.createIcons();
+            initClock();
+            fetchWeather();
+            checkPWAStatus();
+            renderApps();
+            registerServiceWorker();
+        });
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log("Student Portal Cache Active."))
+                .catch(err => console.error("SW Registration failed: ", err));
+            }
+        }
+
+        // --- Dynamic Customizations Theme Logic ---
+        function getAppColorTheme(appId, index) {
+            let selectedColor = localStorage.getItem(`student_app_color_${appId}`);
+            if (!selectedColor) {
+                selectedColor = defaultThemes[index % defaultThemes.length];
+            }
+            return colorThemes[selectedColor] || colorThemes.blue;
+        }
+
+        function setAppColor(appId, colorName, event) {
+            if (event) event.stopPropagation();
+            localStorage.setItem(`student_app_color_${appId}`, colorName);
+            renderApps();
+            showToast(`Theme updated successfully.`);
+        }
+
+        function togglePin(appId, event) {
+            if (event) event.stopPropagation();
+            if (pinnedApps.includes(appId)) {
+                pinnedApps = pinnedApps.filter(id => id !== appId);
+                showToast("Removed from pinned items.");
+            } else {
+                pinnedApps.push(appId);
+                showToast("Added to pinned items.");
+            }
+            localStorage.setItem('student_pinned_apps', JSON.stringify(pinnedApps));
+            renderApps();
+        }
+
+        /* STREAMING_CHUNK: Fetching real-time 3-day weather from telemetry metrics... */
+        async function fetchWeather() {
+            try {
+                // Fetching telemetry statistics for Ranya Coordinate: 36.2551, 44.8824
+                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.2551&longitude=44.8824&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto");
+                if(!res.ok) throw new Error("API call blocked or failed");
+                const data = await res.json();
+                
+                const weatherCodes = data.daily.weather_code;
+                const tempsMax = data.daily.temperature_2m_max;
+                const tempsMin = data.daily.temperature_2m_min;
+
+                function getWeatherIcon(code) {
+                    if (code === 0) return "sun";
+                    if (code >= 1 && code <= 3) return "cloud-sun";
+                    if (code >= 51 && code <= 67) return "cloud-rain";
+                    if (code >= 71 && code <= 86) return "cloud-snow";
+                    return "cloud-lightning";
+                }
+
+                // Days calculation
+                const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const now = new Date();
+                
+                for(let i=0; i<3; i++) {
+                    const tempAvg = Math.round((tempsMax[i] + tempsMin[i]) / 2);
+                    const iconName = getWeatherIcon(weatherCodes[i]);
+                    
+                    document.getElementById(`weather-temp-${i}`).textContent = `${tempAvg}°C`;
+                    const iconEl = document.getElementById(`weather-icon-${i}`);
+                    if(iconEl) iconEl.setAttribute('data-lucide', iconName);
+
+                    if (i > 0) {
+                        const nextDay = new Date();
+                        nextDay.setDate(now.getDate() + i);
+                        const dayLabel = daysOfWeek[nextDay.getDay()].substring(0, 3);
+                        document.getElementById(`weather-day-${i}`).textContent = dayLabel;
+                    }
+                }
+                lucide.createIcons();
+            } catch(e) {
+                // Fallbacks in case rate limit or network is disconnected
+                document.getElementById('weather-temp-0').textContent = "28°";
+                document.getElementById('weather-temp-1').textContent = "29°";
+                document.getElementById('weather-temp-2').textContent = "27°";
+            }
+        }
+
+        /* STREAMING_CHUNK: Running live clock updates with seconds count... */
+        function initClock() {
+            function update() {
+                const now = new Date();
+                // Tick with seconds added explicitly: HH:MM:SS AM/PM
+                document.getElementById('live-time').innerText = now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second: '2-digit', hour12:true});
+                document.getElementById('live-date').innerText = now.toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+                
+                const kurdishDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
+                const englishDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                
+                document.getElementById('ku-day-label').innerText = kurdishDays[now.getDay()];
+                document.getElementById('en-day-label').innerText = englishDays[now.getDay()];
+            }
+            setInterval(update, 1000); update();
+        }
+
+        // --- Adaptive Installation Mechanics ---
+        function checkPWAStatus() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const isInApp = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1) || (ua.indexOf("Snapchat") > -1) || (ua.indexOf("Line") > -1);
+            
+            if (isInApp) {
+                document.getElementById('in-app-warning').style.display = 'flex';
+                return;
+            }
+            const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isIOS && !isStandalone) {
+                const lastDismissed = localStorage.getItem('ios_dismiss_students');
+                if (!lastDismissed || (Date.now() - parseInt(lastDismissed)) > 86400000) {
+                    document.getElementById('ios-install-overlay').style.display = 'flex';
+                }
+            }
+        }
+
+        function dismissIOSPrompt() {
+            localStorage.setItem('ios_dismiss_students', Date.now().toString());
+            document.getElementById('ios-install-overlay').style.display = 'none';
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); deferredPrompt = e;
+            document.getElementById('android-install-btn').classList.remove('hidden');
+            document.getElementById('android-install-btn').classList.add('flex');
+        });
+
+        async function installAndroid() {
+            if(!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if(outcome === 'accepted') {
+                document.getElementById('android-install-btn').classList.add('hidden');
+                showToast("Installing system core.");
+            }
+            deferredPrompt = null;
+        }
+
+        /* STREAMING_CHUNK: Building application rendering elements ... */
+        function buildCardHtml(app, idx, theme) {
+            const numStr = (idx + 1).toString().padStart(2, '0');
+            const isPinned = pinnedApps.includes(app.id);
+            
+            let colorChoicesHtml = '';
+            Object.keys(colorThemes).forEach(cName => {
+                colorChoicesHtml += `<button onclick="setAppColor(${app.id}, '${cName}', event)" class="w-4 h-4 rounded-full bg-${cName === 'emerald' ? 'emerald-500' : cName + '-500'} hover:scale-125 transition-transform" title="${cName}"></button>`;
+            });
+
+            return `
+                <div class="student-card p-5 border shadow-sm flex flex-col justify-between animate-pop ${theme.border} ${theme.bg}">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md shrink-0 ${theme.iconBox}">
+                                <i data-lucide="${app.icon}" class="w-6 h-6 ${theme.icon}"></i>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="togglePin(${app.id}, event)" class="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-amber-500 transition-colors" title="Pin / Unpin">
+                                    <i data-lucide="star" class="w-4.5 h-4.5 ${isPinned ? 'fill-current' : ''}"></i>
+                                </button>
+                                <span class="font-mono text-xs font-black px-2 py-1 bg-slate-200/50 dark:bg-slate-900/50 rounded-lg text-slate-500 dark:text-slate-400">#${numStr}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 cursor-pointer" onclick="window.open('${app.url}', '_blank')">
+                            <h3 class="text-[17px] font-black text-slate-800 dark:text-white leading-tight">${app.titleEn}</h3>
+                            <h4 class="text-xs font-bold text-slate-400 mt-1 font-kurdish leading-tight" dir="rtl">${app.titleKu}</h4>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2.5 font-medium leading-relaxed">${app.desc}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/50 flex justify-between items-center gap-2">
+                        <!-- Custom Palette -->
+                        <div class="flex items-center gap-1.5 bg-slate-200/50 dark:bg-slate-900/50 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <i data-lucide="palette" class="w-3.5 h-3.5 text-slate-500"></i>
+                            <div class="hidden sm:flex items-center gap-1">${colorChoicesHtml}</div>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="generateQR('${app.titleEn}', '${app.url}', event)" class="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-all border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" title="Get QR Code">
+                                <i data-lucide="qr-code" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="window.open('${app.url}', '_blank')" class="px-4 py-2 rounded-xl text-xs font-black tracking-wider uppercase flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 ${theme.btnText} hover:scale-105 transition-transform">
+                                Launch <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApps() {
+            const container = document.getElementById('apps-container');
+            const favContainer = document.getElementById('favorites-container');
+            const favSection = document.getElementById('fav-section');
+
+            container.innerHTML = '';
+            favContainer.innerHTML = '';
+
+            let hasFavs = false;
+
+            appsData.forEach((app, idx) => {
+                const theme = getAppColorTheme(app.id, idx);
+                const cardHtml = buildCardHtml(app, idx, theme);
+                
+                if (pinnedApps.includes(app.id)) {
+                    favContainer.innerHTML += cardHtml;
+                    hasFavs = true;
+                }
+                container.innerHTML += cardHtml;
+            });
+
+            favSection.style.display = hasFavs ? 'block' : 'none';
+            lucide.createIcons();
+        }
+
+        // --- Custom Theme Handler ---
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        /* STREAMING_CHUNK: Custom QR code dynamic generation systems... */
+        function generateQR(title, url, event) {
+            if(event) event.stopPropagation();
+            document.getElementById('qr-app-title').innerText = title;
+            document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}&color=0f172a`;
+            document.getElementById('show-qr-modal').style.display = 'flex';
+        }
+        function closeShowQRModal() { document.getElementById('show-qr-modal').style.display = 'none'; }
+
+        function openQRScanner() {
+            document.getElementById('qr-modal').style.display = 'flex';
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5Qrcode("reader");
+            }
+            const config = { fps: 12, qrbox: { width: 250, height: 250 } };
+            html5QrcodeScanner.start({ facingMode: "environment" }, config, 
+                (decodedText) => {
+                    closeQRModal();
+                    if(decodedText.startsWith('http')) { window.open(decodedText, '_blank'); } 
+                    else { showToast("No redirection link found."); }
+                },
+                (errorMessage) => {}
+            ).catch(err => {
+                showToast("Allow camera permissions.");
+                closeQRModal();
+            });
+        }
+
+        function closeQRModal() {
+            document.getElementById('qr-modal').style.display = 'none';
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.stop().catch(e => console.error(e));
+            }
+        }
+
+        // --- Alerts & Toasts ---
+        let toastTimer;
+        function showToast(msg) {
+            const t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('hidden', 'animate-pop'); void t.offsetWidth; t.classList.add('flex', 'animate-pop');
+            clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.add('hidden'); t.classList.remove('flex'); }, 3000);
+        }
+    </script>
+</body>
+</html>
