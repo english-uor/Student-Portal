@@ -14,7 +14,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Students">
 
-    <!-- Explicitly import web-safe fonts to bypass corrupted local system fonts -->
+    <!-- Explicitly import web-safe fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -22,7 +22,6 @@
     <!-- CSS/JS Libraries and Tailwind Framework -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <script>
         tailwind.config = {
@@ -34,11 +33,7 @@
                         kurdish: ['Noto Sans Arabic', 'sans-serif'] 
                     },
                     colors: { 
-                        brand: { 
-                            400: '#818cf8', 
-                            500: '#6366f1', 
-                            600: '#4f46e5' 
-                        },
+                        brand: { 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5' },
                     }
                 }
             }
@@ -51,123 +46,40 @@
             background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
             min-height: 100vh;
         }
-        .dark body {
-            background: linear-gradient(135deg, #0f172a 0%, #030712 100%);
-        }
+        .dark body { background: linear-gradient(135deg, #0f172a 0%, #030712 100%); }
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        /* Splash Screen Transitions */
         #splash-screen { transition: opacity 0.6s ease-in-out; }
         #main-app { transition: opacity 0.6s ease-in-out; }
 
-        /* MOVING LED BORDER EFFECT - DASHBOARD (Indigo/Pink/Purple) */
+        /* HEADER & DASHBOARD LED EFFECTS */
         .moving-border-wrapper {
-            position: relative;
-            border-radius: 2.3rem;
-            padding: 2.5px; 
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.08);
+            position: relative; border-radius: 2.3rem; padding: 2.5px; overflow: hidden; box-shadow: 0 10px 40px rgba(99, 102, 241, 0.08);
         }
-        .dark .moving-border-wrapper {
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-        }
+        .dark .moving-border-wrapper { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25); }
         .moving-border-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(
-                transparent, 
-                rgba(99, 102, 241, 0.1), 
-                #6366f1, 
-                #a855f7, 
-                #ec4899, 
-                #6366f1, 
-                transparent 25%
-            );
-            animation: rotate-led 4s linear infinite;
-            z-index: 0;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(99, 102, 241, 0.1), #6366f1, #a855f7, #ec4899, #6366f1, transparent 25%);
+            animation: rotate-led 4s linear infinite; z-index: 0;
         }
-        .moving-border-inner {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 2.15rem;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
+        .moving-border-inner { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.97); border-radius: 2.15rem; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         .dark .moving-border-inner { background: rgba(15, 23, 42, 0.95); }
 
-        /* MOVING LED BORDER EFFECT - MAIN HEADER (Violet/Amber/Rose) */
-        .header-led-wrapper {
-            position: relative;
-            border-radius: 1.75rem; 
-            padding: 3px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.08);
-        }
-        .dark .header-led-wrapper {
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        }
+        .header-led-wrapper { position: relative; border-radius: 1.75rem; padding: 3px; overflow: hidden; box-shadow: 0 15px 35px rgba(99, 102, 241, 0.08); }
+        .dark .header-led-wrapper { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); }
         .header-led-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(
-                transparent, 
-                rgba(139, 92, 246, 0.1), 
-                #8b5cf6, /* Violet */
-                #f59e0b, /* Gold/Amber */
-                #ec4899, /* Rose */
-                #8b5cf6, 
-                transparent 30%
-            );
-            animation: rotate-led-reverse 3.5s linear infinite;
-            z-index: 0;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(139, 92, 246, 0.1), #8b5cf6, #f59e0b, #ec4899, #8b5cf6, transparent 30%);
+            animation: rotate-led-reverse 3.5s linear infinite; z-index: 0;
         }
-        .header-led-inner {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 1.6rem;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
+        .header-led-inner { position: relative; z-index: 1; background: rgba(255, 255, 255, 0.97); border-radius: 1.6rem; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         .dark .header-led-inner { background: rgba(15, 23, 42, 0.95); }
 
-        @keyframes rotate-led {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes rotate-led-reverse {
-            0% { transform: rotate(360deg); }
-            100% { transform: rotate(0deg); }
-        }
+        @keyframes rotate-led { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes rotate-led-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
 
-        /* App Cards responsive scaling */
-        .app-card-grid {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 1.5rem;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            border-width: 1.5px;
-        }
-        .dark .app-card-grid { background: rgba(30, 41, 59, 0.8); }
-        .app-card-grid:hover { transform: translateY(-4px); }
-        .app-card-grid:active { transform: scale(0.95); }
-
-        .app-card-list {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 1.25rem;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            border-width: 1.5px;
-        }
-        .dark .app-card-list { background: rgba(30, 41, 59, 0.8); }
-        .app-card-list:hover { transform: translateX(4px); }
-
-        /* Dynamic Inline Dashboard Animations */
+        /* Dynamic Animations */
         #inline-dashboard-content { transition: max-height 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease-out, margin 0.4s ease; }
-        
         .info-item { opacity: 0; transform: translateY(15px); transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .is-open .info-item:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
         .is-open .info-item:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
@@ -181,23 +93,15 @@
 <body class="text-slate-800 dark:text-slate-100 flex flex-col items-center min-h-screen notranslate" translate="no">
 
     <!-- ========================================== -->
-    <!-- 1. WELCOME SPLASH SCREEN (Shows for 3s)    -->
+    <!-- 1. WELCOME SPLASH SCREEN (2 Seconds)       -->
     <!-- ========================================== -->
     <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-5">
-        
-        <!-- Glowing LED Dashboard Card for Splash -->
         <div class="moving-border-wrapper w-full max-w-md md:max-w-xl animate-pop" style="animation-delay: 0.1s;">
             <div class="moving-border-inner w-full p-7 md:p-10 flex flex-col items-center relative z-10">
-                
-                <!-- Splash Header Badge -->
                 <div class="bg-brand-50 dark:bg-brand-900/30 border border-brand-100 dark:border-brand-800 text-brand-600 dark:text-brand-400 text-[10px] md:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 flex items-center gap-1.5 shadow-sm">
                     <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> Students Hub
                 </div>
-
-                <!-- English Date Header -->
                 <h2 class="en-date-display text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-2 text-center">Loading Date...</h2>
-                
-                <!-- Accurate Dual Kurdish Dates -->
                 <div class="flex flex-col items-center gap-1 mb-5">
                     <h3 class="ku-greg-date-display text-[16px] md:text-[18px] font-bold text-brand-600 dark:text-brand-400 font-kurdish text-center" dir="rtl">باردەکرێت...</h3>
                     <h4 class="ku-jalaali-date-display text-[14px] md:text-[16px] font-medium text-slate-500 dark:text-slate-400 font-kurdish text-center mb-1" dir="rtl">...</h4>
@@ -206,16 +110,11 @@
                         <span class="ku-season-display text-[11px] md:text-xs font-bold text-emerald-700 dark:text-emerald-400 font-kurdish">...</span>
                     </div>
                 </div>
-                
-                <!-- Location -->
                 <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-100 dark:border-slate-700 mb-6 shadow-sm">
                     <i data-lucide="map-pin" class="w-4 h-4 text-rose-500"></i>
                     <span class="text-xs md:text-sm font-semibold text-slate-500 dark:text-slate-400">Ranya - Kurdistan | ڕانیە - کوردستان</span>
                 </div>
-                
                 <div class="w-full h-px bg-slate-100 dark:bg-slate-800 mb-6 block"></div>
-
-                <!-- Weather (RTL Layout) -->
                 <div class="flex items-center justify-between w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80 rounded-3xl p-4 md:p-6 mb-8 shadow-sm" dir="rtl">
                     <div class="flex flex-col items-center flex-1 border-l border-slate-200 dark:border-slate-700/50">
                         <span class="text-[11px] md:text-xs text-slate-500 dark:text-slate-400 font-kurdish font-bold mb-2">ئەمڕۆ</span>
@@ -233,8 +132,6 @@
                         <span id="splash-weather-temp-2" class="text-lg md:text-xl font-black text-slate-800 dark:text-white">--°C</span>
                     </div>
                 </div>
-
-                <!-- Live Time -->
                 <div class="bg-[#1a2235] dark:bg-[#0f172a] border border-[#2d3748] dark:border-slate-800 text-white px-8 py-4 rounded-2xl flex flex-col items-center shadow-lg">
                     <div class="flex items-center gap-1.5 text-slate-300 opacity-90 mb-1">
                         <i data-lucide="clock" class="w-4 h-4"></i>
@@ -246,23 +143,19 @@
         </div>
     </div>
 
-
     <!-- ========================================== -->
-    <!-- 2. MAIN APP CONTENT (Responsive Container) -->
+    <!-- 2. MAIN APP CONTENT                        -->
     <!-- ========================================== -->
     <div id="main-app" class="w-full max-w-md md:max-w-5xl lg:max-w-6xl mx-auto pt-safe px-5 pt-5 pb-12 hidden opacity-0 flex-col transition-all duration-300">
         
-        <!-- Main Header with Glowing LED Border -->
         <div class="w-full mb-6 z-20">
             <div class="header-led-wrapper w-full">
                 <div class="header-led-inner px-5 py-6 md:py-8 text-center relative flex flex-col items-center">
-                    
                     <h1 class="text-xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight mb-1">University of Raparin</h1>
                     <h2 class="text-[13px] md:text-base font-bold text-slate-500 dark:text-slate-400">College of Basic Education</h2>
                     <h3 class="text-xs md:text-sm font-bold text-brand-600 dark:text-brand-400 mt-1 mb-4">English Language Department</h3>
                     
-                    <!-- Interactive Student Portal Toggle Button -->
-                    <button onclick="toggleInlineDashboard()" class="group bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-[11px] md:text-xs font-black uppercase tracking-widest px-6 py-2.5 rounded-full border border-brand-200 dark:border-brand-800/50 hover:bg-brand-100 dark:hover:bg-brand-900/50 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 shadow-sm">
+                    <button onclick="window.toggleInlineDashboard()" class="group bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 text-[11px] md:text-xs font-black uppercase tracking-widest px-6 py-2.5 rounded-full border border-brand-200 dark:border-brand-800/50 hover:bg-brand-100 dark:hover:bg-brand-900/50 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 shadow-sm">
                         <i data-lucide="graduation-cap" class="w-4 h-4"></i>
                         <span>Student Portal</span>
                         <i id="dash-chevron" data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></i>
@@ -271,16 +164,9 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 3. DYNAMIC INLINE DASHBOARD (Adaptive Grid)-->
-        <!-- ========================================== -->
         <div id="inline-dashboard-content" class="w-full max-h-0 opacity-0 overflow-hidden -mt-2 mb-2 z-10 relative">
-            
-            <!-- Moving LED Colorful Border Wrapper -->
             <div class="moving-border-wrapper w-full mt-2 mb-4">
                 <div class="moving-border-inner w-full p-6 flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-center justify-items-center">
-                    
-                    <!-- Item 1: Dual Dates & Season -->
                     <div class="info-item flex flex-col items-center w-full text-center">
                         <h2 class="en-date-display text-[18px] md:text-[20px] font-black text-slate-800 dark:text-white tracking-tight mb-1">Loading Date...</h2>
                         <h3 class="ku-greg-date-display text-[14.5px] font-bold text-brand-600 dark:text-brand-400 font-kurdish text-center mb-0.5" dir="rtl">باردەکرێت...</h3>
@@ -289,14 +175,10 @@
                             <i data-lucide="leaf" class="w-3 h-3"></i> <span class="ku-season-display">...</span>
                         </div>
                     </div>
-
-                    <!-- Item 2: Location -->
                     <div class="info-item flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm w-fit">
                         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i>
                         <span class="text-[11px] md:text-xs font-semibold text-slate-500 dark:text-slate-400">Ranya - Kurdistan</span>
                     </div>
-
-                    <!-- Item 3: Weather (RTL) -->
                     <div class="info-item flex items-center justify-between w-full max-w-sm bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/80 rounded-[1.25rem] p-3 shadow-sm" dir="rtl">
                         <div class="flex flex-col items-center flex-1 border-l border-slate-200 dark:border-slate-700/50">
                             <span class="text-[10px] text-slate-500 dark:text-slate-400 font-kurdish font-bold mb-1.5">ئەمڕۆ</span>
@@ -314,52 +196,45 @@
                             <span id="inline-weather-temp-2" class="text-sm font-black text-slate-800 dark:text-white">--°</span>
                         </div>
                     </div>
-
-                    <!-- Item 4: Time -->
                     <div class="info-item bg-[#1a2235] dark:bg-[#0f172a] border border-[#2d3748] dark:border-slate-800 text-white px-6 py-2.5 rounded-xl flex items-center gap-3 shadow-lg w-fit">
                         <i data-lucide="clock" class="w-4 h-4 text-brand-400"></i>
                         <div class="live-time-display text-lg font-mono font-bold tracking-widest text-white">00:00:00 PM</div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- Toolbar controls (Adaptive sizing) -->
         <div class="flex flex-col gap-3 mb-6 relative z-20">
             <div class="flex gap-2 w-full">
                 <div class="relative flex-1">
-                    <input type="text" id="app-search" oninput="filterApps()" placeholder="Search applications..." class="w-full h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] pl-5 pr-10 text-sm font-medium text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-400 shadow-sm placeholder-slate-400">
+                    <input type="text" id="app-search" oninput="window.filterApps()" placeholder="Search applications..." class="w-full h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] pl-5 pr-10 text-sm font-medium text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-400 shadow-sm placeholder-slate-400">
                     <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
                         <i data-lucide="search" class="w-4 h-4"></i>
                     </div>
                 </div>
                 
-                <button onclick="toggleViewMode()" class="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] flex items-center justify-center text-slate-500 dark:text-slate-400 shadow-sm shrink-0 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800" title="Toggle View Mode">
+                <button onclick="window.toggleViewMode()" class="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] flex items-center justify-center text-slate-500 dark:text-slate-400 shadow-sm shrink-0 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800" title="Toggle View Mode">
                     <i id="view-toggle-icon" data-lucide="list" class="w-5 h-5"></i>
                 </button>
-                <button onclick="toggleSortMode()" class="w-12 h-12 bg-brand-500 border border-brand-600 text-white rounded-[1.25rem] flex items-center justify-center shadow-md shadow-brand-500/30 shrink-0 hover:bg-brand-600 transition-colors" title="Sort List">
+                <button onclick="window.toggleSortMode()" class="w-12 h-12 bg-brand-500 border border-brand-600 text-white rounded-[1.25rem] flex items-center justify-center shadow-md shadow-brand-500/30 shrink-0 hover:bg-brand-600 transition-colors" title="Sort List">
                     <i id="sort-icon" data-lucide="arrow-up-down" class="w-5 h-5"></i>
                 </button>
-                <button id="pwaInstallBtn" onclick="installPWA()" class="hidden w-12 h-12 bg-emerald-500 border border-emerald-600 text-white rounded-[1.25rem] flex items-center justify-center shadow-md shadow-emerald-500/30 shrink-0 hover:bg-emerald-600 transition-all scale-100 hover:scale-105 active:scale-95" title="Install Portal">
+                <button onclick="window.installPWA()" class="w-12 h-12 bg-emerald-500 border border-emerald-600 text-white rounded-[1.25rem] flex items-center justify-center shadow-md shadow-emerald-500/30 shrink-0 hover:bg-emerald-600 transition-colors" title="Pin / Install App">
                     <i data-lucide="download" class="w-5 h-5"></i>
                 </button>
-                <button id="adminBtn" onclick="toggleAdminPanel()" class="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] flex items-center justify-center text-slate-500 dark:text-slate-400 shadow-sm shrink-0 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800" title="Admin Settings">
+                <button id="adminBtn" onclick="window.toggleAdminPanel()" class="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] flex items-center justify-center text-slate-500 dark:text-slate-400 shadow-sm shrink-0 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800" title="Admin Settings">
                     <i id="adminLockIcon" data-lucide="lock" class="w-5 h-5"></i>
                 </button>
-                <button onclick="toggleTheme()" class="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] flex items-center justify-center text-slate-500 dark:text-slate-400 shadow-sm shrink-0 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800" title="Toggle Theme">
+                <button onclick="window.toggleTheme()" class="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[1.25rem] flex items-center justify-center text-slate-500 dark:text-slate-400 shadow-sm shrink-0 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800" title="Toggle Theme">
                     <i data-lucide="moon" class="hidden dark:block w-5 h-5"></i>
                     <i data-lucide="sun" class="block dark:hidden w-5 h-5"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Apps Responsive Container (Perfect for Mobile AND Desktop) -->
+        <!-- Apps Container -->
         <div id="apps-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 w-full relative z-20"></div>
 
-        <!-- ========================================== -->
-        <!-- 4. SECURE ADMIN SETTINGS & LINK MANAGER    -->
-        <!-- ========================================== -->
         <div id="adminPanel" class="hidden mt-8 border border-brand-200 dark:border-brand-900/50 rounded-2xl bg-brand-50/50 dark:bg-slate-900/40 p-6 space-y-4 animate-pop w-full z-20 relative">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div class="flex items-center space-x-2">
@@ -368,16 +243,15 @@
                     </div>
                     <div>
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Admin Control Center</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Edit custom paths, change URL targets, or lock links dynamically.</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Edit and lock apps. Linked to Google Apps Script Backend.</p>
                     </div>
                 </div>
-                <button onclick="resetToDefaults()" class="text-xs font-semibold text-rose-500 hover:text-rose-600 flex items-center space-x-1 hover:underline">
+                <button onclick="window.resetToDefaults()" class="text-xs font-semibold text-rose-500 hover:text-rose-600 flex items-center space-x-1 hover:underline">
                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                     <span>Reset to Defaults</span>
                 </button>
             </div>
 
-            <!-- Table layout for customized links -->
             <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-950">
                 <table class="w-full text-left text-xs md:text-sm border-collapse">
                     <thead>
@@ -389,13 +263,13 @@
                         </tr>
                     </thead>
                     <tbody id="adminAppsList" class="divide-y divide-slate-100 dark:divide-slate-900">
-                        <!-- Filled dynamically via JS -->
+                        <!-- Filled dynamically -->
                     </tbody>
                 </table>
             </div>
             
             <div class="flex justify-end pt-2">
-                <button onclick="lockAdminMode()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-900 transition-all flex items-center space-x-1.5">
+                <button onclick="window.lockAdminMode()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-900 transition-all flex items-center space-x-1.5">
                     <i data-lucide="lock" class="w-4 h-4"></i>
                     <span>Lock Configuration Mode</span>
                 </button>
@@ -404,10 +278,7 @@
 
     </div>
 
-    <!-- ========================================== -->
-    <!-- 5. SECURITY MODALS & NOTIFICATIONS         -->
-    <!-- ========================================== -->
-    <!-- PIN Verification Dialog -->
+    <!-- Modals & Toasts -->
     <div id="pinModal" class="hidden fixed inset-0 z-[150] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl animate-pop relative">
             <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center space-x-2">
@@ -415,19 +286,16 @@
                 <span>Admin Authentication Required</span>
             </h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-kurdish" dir="rtl">تکایە تێپەڕەوشەی ئەدمین (PIN) بنووسە بۆ چالاککردنی دۆخی ڕێکخستن.</p>
-            
             <div class="mt-4">
                 <input type="password" id="adminPinInput" placeholder="Enter security PIN..." class="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-400">
             </div>
-
             <div class="mt-6 flex items-center justify-end space-x-2">
-                <button onclick="closePinModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
-                <button onclick="verifyAdminPin()" class="px-5 py-2 text-xs font-semibold rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/15">Verify & Unlock</button>
+                <button onclick="window.closePinModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                <button onclick="window.verifyAdminPin()" class="px-5 py-2 text-xs font-semibold rounded-xl bg-brand-500 hover:bg-brand-600 text-white shadow-md shadow-brand-500/15">Verify & Unlock</button>
             </div>
         </div>
     </div>
 
-    <!-- Live Edit App URL Modal -->
     <div id="editModal" class="hidden fixed inset-0 z-[160] bg-slate-950/75 backdrop-blur-sm items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl animate-pop relative">
             <h3 class="text-base font-bold text-slate-900 dark:text-white">Edit Application Route</h3>
@@ -446,25 +314,26 @@
                 </div>
             </div>
             <div class="mt-6 flex justify-end space-x-2">
-                <button onclick="closeEditModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
-                <button onclick="saveAppChanges()" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-brand-500 text-white">Save Changes</button>
+                <button onclick="window.closeEditModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                <button onclick="window.saveAppChanges()" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-brand-500 text-white">Save Changes</button>
             </div>
         </div>
     </div>
 
-    <!-- Floating System Toast Notification -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] hidden">
         <div class="bg-slate-800 border border-slate-700 text-white px-6 py-3.5 rounded-full shadow-2xl flex items-center gap-3 font-semibold text-sm">
             <i data-lucide="info" class="w-5 h-5 text-brand-400"></i><span id="toast-msg">Notification</span>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 6. PROGRAM LOGIC & ASYNC UTILITIES         -->
-    <!-- ========================================== -->
     <script>
-        // Database holding the EXACT requested Student Portal applications
-        const defaultApps = [
+        // =========================================================================
+        // IMPORTANT: PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL HERE
+        // =========================================================================
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx3vud0I_vOWbQdIX0uTd6M0brtWO50n1D6AJaG0hCEYUAVWFmnpa5o4-4VKGjj_KVBLQ/exec"; 
+
+        // 6 Custom Student Applications
+        window.defaultApps = [
             { id: 1, titleEn: "Student Portal", titleKu: "پۆرتاڵی خوێندکاران", icon: "graduation-cap", url: "https://english-uor.github.io/Students-V1/", theme: "indigo", locked: false },
             { id: 2, titleEn: "Research Library", titleKu: "کتێبخانەی توێژینەوە", icon: "library", url: "https://english-uor.github.io/Library/", theme: "emerald", locked: false },
             { id: 3, titleEn: "Topic Selection", titleKu: "دیاریکردنی بابەتەکان", icon: "list-checks", url: "https://english-uor.github.io/Topic-distribution/", theme: "purple", locked: false },
@@ -473,42 +342,43 @@
             { id: 6, titleEn: "Schedules & Exams", titleKu: "خشتە و تاقیکردنیەوەکان", icon: "file-text", url: "https://english-uor.github.io/schedule-calendar-exam/", theme: "cyan", locked: false }
         ];
 
-        const gridThemes = {
-            rose: { border: "border-rose-200 dark:border-rose-900/60", iconText: "text-rose-500", iconBg: "bg-rose-50 dark:bg-rose-950/50" },
-            slate: { border: "border-slate-200 dark:border-slate-700/60", iconText: "text-slate-600 dark:text-slate-400", iconBg: "bg-slate-100 dark:bg-slate-800" },
-            blue: { border: "border-blue-200 dark:border-blue-900/60", iconText: "text-blue-500", iconBg: "bg-blue-50 dark:bg-blue-950/50" },
-            emerald: { border: "border-emerald-200 dark:border-emerald-900/60", iconText: "text-emerald-500", iconBg: "bg-emerald-50 dark:bg-emerald-950/50" },
-            amber: { border: "border-amber-200 dark:border-amber-900/60", iconText: "text-amber-500", iconBg: "bg-amber-50 dark:bg-amber-950/50" },
-            purple: { border: "border-purple-200 dark:border-purple-900/60", iconText: "text-purple-500", iconBg: "bg-purple-50 dark:bg-purple-950/50" },
-            cyan: { border: "border-cyan-200 dark:border-cyan-900/60", iconText: "text-cyan-500", iconBg: "bg-cyan-50 dark:bg-cyan-950/50" },
-            indigo: { border: "border-indigo-200 dark:border-indigo-900/60", iconText: "text-indigo-500", iconBg: "bg-indigo-50 dark:bg-indigo-950/50" }
+        // Advanced Theming for heavily tinted backgrounds and dynamic stable/moving LEDs
+        window.gridThemes = {
+            blue: { border: "from-blue-400 to-blue-600", bg: "bg-blue-50 dark:bg-blue-950/40", iconText: "text-blue-600 dark:text-blue-400", iconBg: "bg-blue-100/50 dark:bg-blue-900/50" },
+            rose: { border: "from-rose-400 to-rose-600", bg: "bg-rose-50 dark:bg-rose-950/40", iconText: "text-rose-600 dark:text-rose-400", iconBg: "bg-rose-100/50 dark:bg-rose-900/50" },
+            emerald: { border: "from-emerald-400 to-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950/40", iconText: "text-emerald-600 dark:text-emerald-400", iconBg: "bg-emerald-100/50 dark:bg-emerald-900/50" },
+            indigo: { border: "from-indigo-400 to-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950/40", iconText: "text-indigo-600 dark:text-indigo-400", iconBg: "bg-indigo-100/50 dark:bg-indigo-900/50" },
+            amber: { border: "from-amber-400 to-amber-600", bg: "bg-amber-50 dark:bg-amber-950/40", iconText: "text-amber-600 dark:text-amber-400", iconBg: "bg-amber-100/50 dark:bg-amber-900/50" },
+            cyan: { border: "from-cyan-400 to-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950/40", iconText: "text-cyan-600 dark:text-cyan-400", iconBg: "bg-cyan-100/50 dark:bg-cyan-900/50" },
+            fuchsia: { border: "from-fuchsia-400 to-fuchsia-600", bg: "bg-fuchsia-50 dark:bg-fuchsia-950/40", iconText: "text-fuchsia-600 dark:text-fuchsia-400", iconBg: "bg-fuchsia-100/50 dark:bg-fuchsia-900/50" },
+            orange: { border: "from-orange-400 to-orange-600", bg: "bg-orange-50 dark:bg-orange-950/40", iconText: "text-orange-600 dark:text-orange-400", iconBg: "bg-orange-100/50 dark:bg-orange-900/50" },
+            purple: { border: "from-purple-400 to-purple-600", bg: "bg-purple-50 dark:bg-purple-950/40", iconText: "text-purple-600 dark:text-purple-400", iconBg: "bg-purple-100/50 dark:bg-purple-900/50" },
+            teal: { border: "from-teal-400 to-teal-600", bg: "bg-teal-50 dark:bg-teal-950/40", iconText: "text-teal-600 dark:text-teal-400", iconBg: "bg-teal-100/50 dark:bg-teal-900/50" }
         };
 
-        let appsList = [];
-        let currentView = localStorage.getItem('student_view_mode') || 'grid';
-        let sortMode = 'default'; 
-        let isDashboardOpen = false;
-        let isAdminUnlocked = false;
-        let editingAppId = null;
-        let fetchedAdminPin = null; // Clean query setup
+        window.appsList = [];
+        window.currentView = localStorage.getItem('student_view_mode') || 'grid';
+        window.sortMode = 'default'; 
+        window.isDashboardOpen = false;
+        window.isAdminUnlocked = false;
+        window.editingAppId = null;
+        let deferredPrompt;
 
-        // On Document Booting
         document.addEventListener('DOMContentLoaded', () => {
-            initTheme();
-            loadAppsDatabase();
-            updateViewIcon();
-            initClock();
-            fetchWeather();
-            renderApps();
-            fetchAdminPin(); // Secure dynamic password verification
-            registerServiceWorker(); // Setup local Service Worker
+            window.initTheme();
+            window.updateViewIcon();
+            window.initClock();
+            window.fetchWeather();
+            
+            // Connect to Cloud (Google Apps Script) or fallback local
+            window.cloudLoad();
+
             lucide.createIcons();
             
-            // Welcome Screen Timer (3 seconds)
+            // exactly 2 seconds splash
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 const mainApp = document.getElementById('main-app');
-                
                 splash.style.opacity = '0';
                 setTimeout(() => {
                     splash.classList.add('hidden');
@@ -516,85 +386,101 @@
                     void mainApp.offsetWidth; 
                     mainApp.style.opacity = '1';
                 }, 600); 
-            }, 3000); 
+            }, 2000); 
         });
 
-        // Load customizable list from LocalStorage or defaults
-        function loadAppsDatabase() {
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        window.installPWA = function() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') window.showToast("داونڵۆدکردن دەستیپێکرد | Installing...");
+                    deferredPrompt = null;
+                });
+            } else {
+                window.showToast("بۆ دابەزاندن، لە مێنیوی وێبگەڕەکەت کرتە بکە لە Add to Home Screen");
+            }
+        }
+
+        // GOOGLE APPS SCRIPT LOAD LOGIC
+        window.cloudLoad = async function() {
+            if (!GAS_WEB_APP_URL) {
+                console.log("No GAS URL provided. Loading locally.");
+                window.loadAppsDatabaseLocal();
+                return;
+            }
+            try {
+                const res = await fetch(GAS_WEB_APP_URL);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    window.appsList = data;
+                    window.renderApps();
+                    if (window.isAdminUnlocked) window.renderAdminTable();
+                } else {
+                    window.loadAppsDatabaseLocal();
+                }
+            } catch (e) {
+                console.error("Cloud fetch failed", e);
+                window.loadAppsDatabaseLocal();
+            }
+        };
+
+        window.cloudSave = async function(data) {
+            if (!GAS_WEB_APP_URL) return;
+            try {
+                await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(data)
+                });
+            } catch(e) {
+                console.error("Cloud save failed", e);
+            }
+        }
+
+        window.loadAppsDatabaseLocal = function() {
             const saved = localStorage.getItem('uor_custom_students_apps');
             if (saved) {
-                try {
-                    appsList = JSON.parse(saved);
-                } catch(e) {
-                    appsList = [...defaultApps];
-                }
-            } else {
-                appsList = [...defaultApps];
-            }
-        }
+                try { window.appsList = JSON.parse(saved); } catch(e) { window.appsList = [...window.defaultApps]; }
+            } else { window.appsList = [...window.defaultApps]; }
+            window.renderApps();
+            if (window.isAdminUnlocked) window.renderAdminTable();
+        };
 
-        function saveAppsDatabase() {
-            localStorage.setItem('uor_custom_students_apps', JSON.stringify(appsList));
-        }
+        window.saveAppsDatabase = function() {
+            // Push to Google Apps Script cloud!
+            window.cloudSave(window.appsList);
+            // Save locally as backup
+            localStorage.setItem('uor_custom_students_apps', JSON.stringify(window.appsList));
+        };
 
-        // Secure password retrieval from local structure
-        async function fetchAdminPin() {
-            try {
-                const response = await fetch('admin.html');
-                if (response.ok) {
-                    const text = await response.text();
-                    // Match JSON in case of standard format
-                    const pinMatch = text.match(/"adminPin"\s*:\s*"([^"]+)"/);
-                    if (pinMatch && pinMatch[1]) {
-                        fetchedAdminPin = pinMatch[1];
-                    }
-                }
-            } catch (err) {
-                console.log("Admin.html fetch omitted or local environment bypass triggered.");
-            }
-        }
-
-        // --- Inline Dashboard Controller ---
-        function toggleInlineDashboard() {
+        window.toggleInlineDashboard = function() {
             const content = document.getElementById('inline-dashboard-content');
             const chevron = document.getElementById('dash-chevron');
-            isDashboardOpen = !isDashboardOpen;
-            
-            if (isDashboardOpen) {
-                content.style.maxHeight = '800px';
-                content.style.opacity = '1';
-                content.classList.add('is-open');
-                chevron.style.transform = 'rotate(180deg)';
+            window.isDashboardOpen = !window.isDashboardOpen;
+            if (window.isDashboardOpen) {
+                content.style.maxHeight = '800px'; content.style.opacity = '1'; content.classList.add('is-open'); chevron.style.transform = 'rotate(180deg)';
             } else {
-                content.style.maxHeight = '0';
-                content.style.opacity = '0';
-                content.classList.remove('is-open');
-                chevron.style.transform = 'rotate(0deg)';
+                content.style.maxHeight = '0'; content.style.opacity = '0'; content.classList.remove('is-open'); chevron.style.transform = 'rotate(0deg)';
             }
-        }
+        };
 
-        // --- Gregorian & Jalaali Kurdish Calendar Logic ---
-        function toKurdishDigits(num) {
-            return num.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
-        }
-
+        // Dates & Weather
+        function toKurdishDigits(num) { return num.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
         function gregorianToJalaali(gy, gm, gd) {
             const g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-            let jy = (gy <= 1600) ? 0 : 979;
-            gy -= (gy <= 1600) ? 621 : 1600;
-            let gy2 = (gm > 2) ? (gy + 1) : gy;
+            let jy = (gy <= 1600) ? 0 : 979; gy -= (gy <= 1600) ? 621 : 1600; let gy2 = (gm > 2) ? (gy + 1) : gy;
             let days = (365 * gy) + parseInt((gy2 + 3) / 4) - parseInt((gy2 + 99) / 100) + parseInt((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
-            jy += 33 * parseInt(days / 12053);
-            days %= 12053;
-            jy += 4 * parseInt(days / 1461);
-            days %= 1461;
-            jy += parseInt((days - 1) / 365);
+            jy += 33 * parseInt(days / 12053); days %= 12053; jy += 4 * parseInt(days / 1461); days %= 1461; jy += parseInt((days - 1) / 365);
             if (days > 365) days = (days - 1) % 365;
             let jm = (days < 186) ? 1 + parseInt(days / 31) : 7 + parseInt((days - 186) / 30);
             let jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
             return [jy, jm, jd];
         }
-
         function getKurdishSeason(month, day) { 
             if ((month === 2 && day >= 21) || month === 3 || month === 4 || (month === 5 && day <= 20)) return "وەرزی بەهار"; 
             if ((month === 5 && day >= 21) || month === 6 || month === 7 || (month === 8 && day <= 22)) return "وەرزی هاوین"; 
@@ -602,37 +488,19 @@
             return "وەرزی زستان"; 
         }
 
-        function initClock() {
+        window.initClock = function() {
             const kurdishDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
-            
-            const kurdishGregorianMonths = [
-                "کانوونی دووەم", "شوبات", "ئادار", "نیسان", "ئایار", "حوزەیران", 
-                "تەممووز", "ئاب", "ئەیلوول", "تشرینی یەکەم", "تشرینی دووەم", "کانوونی یەکەم"
-            ];
-
-            const kurdishJalaaliMonths = [
-                "خاکەلێوە", "گوڵان", "جۆزەردان", "پووشپەڕ", "گەلاوێژ", "خەرمانان", 
-                "ڕەزبەر", "خەزەڵوەر", "سەرماوەز", "بەفرانبار", "ڕێبەندان", "ڕەشەمە"
-            ];
-
+            const kurdishGregorianMonths = ["کانوونی دووەم", "شوبات", "ئادار", "نیسان", "ئایار", "حوزەیران", "تەممووز", "ئاب", "ئەیلوول", "تشرینی یەکەم", "تشرینی دووەم", "کانوونی یەکەم"];
+            const kurdishJalaaliMonths = ["خاکەلێوە", "گوڵان", "جۆزەردان", "پووشپەڕ", "گەلاوێژ", "خەرمانان", "ڕەزبەر", "خەزەڵوەر", "سەرماوەز", "بەفرانبار", "ڕێبەندان", "ڕەشەمە"];
             function update() {
                 const now = new Date();
-                
-                // English format
                 const timeString = now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second: '2-digit', hour12:true});
                 const dateString = now.toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
-                
-                // Kurdish Gregorian
                 const kuDayName = kurdishDays[now.getDay()];
                 const kuGregDateStr = `${kuDayName}، ${toKurdishDigits(now.getDate())}ی ${kurdishGregorianMonths[now.getMonth()]}ی ${toKurdishDigits(now.getFullYear())}`;
-                
-                // Kurdish Jalaali
                 const [jYear, jMonth, jDay] = gregorianToJalaali(now.getFullYear(), now.getMonth() + 1, now.getDate());
-                const kYear = jYear + 1321; 
-                const kuJalaaliDateStr = `${toKurdishDigits(jDay)}ی ${kurdishJalaaliMonths[jMonth - 1]}ی ${toKurdishDigits(kYear)}`;
-
+                const kuJalaaliDateStr = `${toKurdishDigits(jDay)}ی ${kurdishJalaaliMonths[jMonth - 1]}ی ${toKurdishDigits(jYear + 1321)}`;
                 const kuSeasonStr = getKurdishSeason(now.getMonth(), now.getDate());
-
                 document.querySelectorAll('.en-date-display').forEach(el => el.innerText = dateString);
                 document.querySelectorAll('.ku-greg-date-display').forEach(el => el.innerText = kuGregDateStr);
                 document.querySelectorAll('.ku-jalaali-date-display').forEach(el => el.innerText = kuJalaaliDateStr);
@@ -642,40 +510,26 @@
             setInterval(update, 1000); update();
         }
 
-        // --- Weather Fetching from API ---
-        async function fetchWeather() {
+        window.fetchWeather = async function() {
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.2565&longitude=44.8828&daily=temperature_2m_max,weather_code&timezone=auto");
-                if(!res.ok) throw new Error("API limits exceeded");
                 const data = await res.json();
-                
-                const weatherCodes = data.daily.weather_code;
-                const tempsMax = data.daily.temperature_2m_max;
-
                 function getWeatherIcon(code) {
-                    if (code === 0) return "sun";
-                    if (code >= 1 && code <= 3) return "cloud-sun";
-                    if (code >= 51 && code <= 67) return "cloud-rain";
-                    if (code >= 71 && code <= 86) return "cloud-snow";
-                    return "cloud-lightning";
+                    if (code === 0) return "sun"; if (code >= 1 && code <= 3) return "cloud-sun"; if (code >= 51 && code <= 67) return "cloud-rain";
+                    if (code >= 71 && code <= 86) return "cloud-snow"; return "cloud-lightning";
                 }
-
                 const kurdishDays = ["یەکشەممە", "دووشەممە", "سێشەممە", "چوارشەممە", "پێنجشەممە", "هەینی", "شەممە"];
-                const now = new Date();
-                const todayIdx = now.getDay();
+                const now = new Date(); const todayIdx = now.getDay();
                 
                 for(let i=0; i<3; i++) {
-                    const tempHigh = Math.round(tempsMax[i]);
-                    const iconName = getWeatherIcon(weatherCodes[i]);
-                    
+                    const tempHigh = Math.round(data.daily.temperature_2m_max[i]);
+                    const iconName = getWeatherIcon(data.daily.weather_code[i]);
                     document.getElementById(`splash-weather-temp-${i}`).textContent = `${tempHigh}°C`;
                     const sIcon = document.getElementById(`splash-weather-icon-${i}`);
                     if(sIcon) sIcon.setAttribute('data-lucide', iconName);
-
                     document.getElementById(`inline-weather-temp-${i}`).textContent = `${tempHigh}°C`;
                     const iIcon = document.getElementById(`inline-weather-icon-${i}`);
                     if(iIcon) iIcon.setAttribute('data-lucide', iconName);
-
                     if (i === 1) {
                         const tDay = kurdishDays[(todayIdx + 1) % 7];
                         document.getElementById(`splash-weather-day-1`).textContent = tDay;
@@ -687,318 +541,284 @@
                     }
                 }
                 lucide.createIcons();
-            } catch(e) {
-                for(let i=0; i<3; i++) {
-                    let defaultTemp = i === 0 ? "42°C" : i === 1 ? "40°C" : "39°C";
-                    document.getElementById(`splash-weather-temp-${i}`).textContent = defaultTemp;
-                    document.getElementById(`inline-weather-temp-${i}`).textContent = defaultTemp;
-                }
-            }
+            } catch(e) {}
         }
 
-        // --- Sorting and Responsive Rendering ---
-        function toggleSortMode() {
-            if(sortMode === 'default') sortMode = 'asc';
-            else if(sortMode === 'asc') sortMode = 'desc';
-            else sortMode = 'default';
-            
+        window.toggleSortMode = function() {
+            if(window.sortMode === 'default') window.sortMode = 'asc';
+            else if(window.sortMode === 'asc') window.sortMode = 'desc';
+            else window.sortMode = 'default';
             const icon = document.getElementById('sort-icon');
-            if(sortMode === 'default') icon.setAttribute('data-lucide', 'arrow-up-down');
-            else if(sortMode === 'asc') icon.setAttribute('data-lucide', 'arrow-down-a-z');
+            if(window.sortMode === 'default') icon.setAttribute('data-lucide', 'arrow-up-down');
+            else if(window.sortMode === 'asc') icon.setAttribute('data-lucide', 'arrow-down-a-z');
             else icon.setAttribute('data-lucide', 'arrow-up-z-a');
-            
-            lucide.createIcons();
-            showToast(sortMode === 'default' ? "Default Order" : sortMode === 'asc' ? "Sorted A-Z" : "Sorted Z-A");
-            filterApps();
+            lucide.createIcons(); window.filterApps();
         }
 
-        function toggleViewMode() {
-            currentView = currentView === 'grid' ? 'list' : 'grid';
-            localStorage.setItem('student_view_mode', currentView);
-            updateViewIcon();
-            filterApps();
+        window.toggleViewMode = function() {
+            window.currentView = window.currentView === 'grid' ? 'list' : 'grid';
+            localStorage.setItem('student_view_mode', window.currentView);
+            window.updateViewIcon(); window.filterApps();
         }
 
-        function updateViewIcon() {
+        window.updateViewIcon = function() {
             const iconEl = document.getElementById('view-toggle-icon');
-            if (currentView === 'grid') iconEl.setAttribute('data-lucide', 'list');
+            if (window.currentView === 'grid') iconEl.setAttribute('data-lucide', 'list');
             else iconEl.setAttribute('data-lucide', 'layout-grid');
             lucide.createIcons();
         }
 
-        function filterApps() {
+        window.filterApps = function() {
             const searchQuery = document.getElementById('app-search').value.toLowerCase();
             const container = document.getElementById('apps-container');
             container.innerHTML = '';
             
-            if (currentView === 'grid') {
-                container.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 w-full relative z-20';
-            } else {
-                container.className = 'grid grid-cols-1 md:grid-cols-2 gap-3 w-full relative z-20';
-            }
+            if (window.currentView === 'grid') container.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 w-full relative z-20';
+            else container.className = 'grid grid-cols-1 md:grid-cols-2 gap-3 w-full relative z-20';
 
-            let filtered = appsList.filter(app => 
-                app.titleEn.toLowerCase().includes(searchQuery) || 
-                app.titleKu.includes(searchQuery)
-            );
+            let filtered = window.appsList.filter(app => app.titleEn.toLowerCase().includes(searchQuery) || app.titleKu.includes(searchQuery));
 
-            if (sortMode === 'asc') filtered.sort((a, b) => a.titleEn.localeCompare(b.titleEn));
-            else if (sortMode === 'desc') filtered.sort((a, b) => b.titleEn.localeCompare(a.titleEn));
+            if (window.sortMode === 'asc') filtered.sort((a, b) => a.titleEn.localeCompare(b.titleEn));
+            else if (window.sortMode === 'desc') filtered.sort((a, b) => b.titleEn.localeCompare(a.titleEn));
+            else filtered.sort((a, b) => a.id - b.id);
+
+            // ALWAYS Push locked items strictly to the bottom
+            filtered.sort((a, b) => {
+                if (a.locked && !b.locked) return 1;
+                if (!a.locked && b.locked) return -1;
+                return 0; 
+            });
+
+            let displayIndex = 1;
 
             filtered.forEach((app) => {
-                const theme = gridThemes[app.theme] || gridThemes.slate;
+                const theme = window.gridThemes[app.theme] || window.gridThemes.indigo;
                 const isLocked = app.locked || false;
+                
+                // Advanced Stable Gradient Border + Animated Rotating Internal Layer
+                const movingLedCSS = `background: conic-gradient(transparent, rgba(255,255,255,0.7), rgba(0,0,0,0.5), transparent 25%); animation: rotate-led 0.8s linear infinite;`;
 
-                if (currentView === 'grid') {
+                if (window.currentView === 'grid') {
                     container.innerHTML += `
-                        <div onclick="handleAppClick(${app.id})" class="app-card-grid p-3 sm:p-5 flex flex-col items-center justify-start text-center relative cursor-pointer shadow-sm ${theme.border} ${isLocked ? 'opacity-55 saturate-[0.25]' : ''}">
-                            ${isLocked ? `
-                            <div class="absolute top-2 right-2 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-md animate-pulse">
-                                <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                            </div>` : ''}
-                            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center mb-2.5 border border-slate-100 dark:border-slate-700/50 shadow-sm ${theme.iconBg}">
-                                <i data-lucide="${app.icon}" class="w-5 h-5 sm:w-6 sm:h-6 ${theme.iconText}"></i>
+                        <div class="relative rounded-[1.6rem] p-[2.5px] overflow-hidden group cursor-pointer" onclick="window.handleAppClick(${app.id}, 'spin-${app.id}')">
+                            <!-- Stable LED Gradient Border -->
+                            <div class="absolute inset-0 bg-gradient-to-br ${theme.border} opacity-80"></div>
+                            
+                            <!-- Hidden Moving LED Layer (Spins on click) -->
+                            <div id="spin-${app.id}" class="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-0 transition-opacity duration-300 z-0" style="${movingLedCSS}"></div>
+                            
+                            <!-- Actual Unique Background Card Content -->
+                            <div class="p-3 sm:p-5 flex flex-col items-center justify-start text-center relative shadow-sm ${theme.bg} ${isLocked ? 'opacity-55 saturate-[0.25]' : ''} w-full h-full rounded-[1.4rem] z-10 backdrop-blur-md">
+                                
+                                <!-- App Number Badge -->
+                                <div class="absolute top-2 left-2 w-5 h-5 bg-white/70 dark:bg-slate-900/70 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-600 shadow-sm z-10 backdrop-blur-sm border border-white/40 dark:border-slate-700/40">${displayIndex}</div>
+                                
+                                ${isLocked ? `
+                                <div class="absolute top-2 right-2 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-md animate-pulse z-10">
+                                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                                </div>` : ''}
+
+                                <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center mb-2.5 border border-white/50 dark:border-slate-700/50 shadow-sm ${theme.iconBg}">
+                                    <i data-lucide="${app.icon}" class="w-5 h-5 sm:w-6 sm:h-6 ${theme.iconText}"></i>
+                                </div>
+                                <h3 class="text-[10px] sm:text-[11px] md:text-xs font-bold text-slate-800 dark:text-slate-200 leading-snug w-full truncate px-1">${app.titleEn}</h3>
+                                <h4 class="text-[9px] sm:text-[10px] md:text-[11px] text-slate-500 mt-0.5 font-kurdish leading-tight w-full truncate px-1" dir="rtl">${app.titleKu}</h4>
                             </div>
-                            <h3 class="text-[10px] sm:text-[11px] md:text-xs font-bold text-slate-800 dark:text-slate-200 leading-snug w-full truncate px-1">${app.titleEn}</h3>
-                            <h4 class="text-[9px] sm:text-[10px] md:text-[11px] text-slate-500 mt-0.5 font-kurdish leading-tight w-full truncate px-1" dir="rtl">${app.titleKu}</h4>
                         </div>`;
                 } else {
                     container.innerHTML += `
-                        <div onclick="handleAppClick(${app.id})" class="app-card-list p-4 flex items-center gap-4 cursor-pointer relative shadow-sm ${theme.border} ${isLocked ? 'opacity-55 saturate-[0.25]' : ''}">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-700/50 shadow-sm ${theme.iconBg}">
-                                <i data-lucide="${app.icon}" class="w-6 h-6 ${theme.iconText}"></i>
-                            </div>
-                            <div class="flex flex-col flex-1 pr-6">
-                                <h3 class="text-[14px] md:text-[16px] font-bold text-slate-800 dark:text-slate-200 leading-tight flex items-center gap-2">
-                                    ${app.titleEn}
-                                    ${isLocked ? `<i data-lucide="lock" class="w-3.5 h-3.5 text-rose-500"></i>` : ''}
-                                </h3>
-                                <h4 class="text-[11px] md:text-xs font-bold text-slate-500 mt-1 font-kurdish" dir="rtl">${app.titleKu}</h4>
+                        <div class="relative rounded-[1.3rem] p-[2px] overflow-hidden group cursor-pointer" onclick="window.handleAppClick(${app.id}, 'spin-${app.id}')">
+                            <!-- Stable LED Gradient Border -->
+                            <div class="absolute inset-0 bg-gradient-to-r ${theme.border} opacity-80"></div>
+                            
+                            <!-- Hidden Moving LED Layer (Spins on click) -->
+                            <div id="spin-${app.id}" class="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-0 transition-opacity duration-300 z-0" style="${movingLedCSS}"></div>
+                            
+                            <!-- List Card Content -->
+                            <div class="p-4 flex items-center gap-3 md:gap-4 relative shadow-sm ${theme.bg} ${isLocked ? 'opacity-55 saturate-[0.25]' : ''} w-full h-full rounded-[1.15rem] z-10 backdrop-blur-md">
+                                
+                                <div class="w-7 h-7 bg-white/70 dark:bg-slate-900/70 rounded-full flex items-center justify-center text-[12px] font-bold text-slate-600 shrink-0 shadow-inner border border-white/40 dark:border-slate-700/40">
+                                    ${displayIndex}
+                                </div>
+
+                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-white/50 dark:border-slate-700/50 shadow-sm ${theme.iconBg}">
+                                    <i data-lucide="${app.icon}" class="w-6 h-6 ${theme.iconText}"></i>
+                                </div>
+                                <div class="flex flex-col flex-1 pr-4">
+                                    <h3 class="text-[14px] md:text-[16px] font-bold text-slate-800 dark:text-slate-200 leading-tight">
+                                        ${app.titleEn}
+                                    </h3>
+                                    <h4 class="text-[11px] md:text-xs font-bold text-slate-500 mt-1 font-kurdish" dir="rtl">${app.titleKu}</h4>
+                                </div>
+                                
+                                ${isLocked ? `
+                                <div class="shrink-0 w-8 h-8 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center shadow-sm border border-rose-500/20">
+                                    <i data-lucide="lock" class="w-4 h-4 animate-pulse"></i>
+                                </div>` : ''}
                             </div>
                         </div>`;
                 }
+                displayIndex++;
             });
             lucide.createIcons();
         }
 
-        function renderApps() { filterApps(); }
+        window.renderApps = function() { window.filterApps(); }
 
-        function handleAppClick(id) {
-            const app = appsList.find(a => a.id === id);
-            if (app) {
-                if (app.locked) {
-                    showToast("ئەم بەشە لەلایەن ئەدمینەوە داخراوە | Locked by Admin");
-                } else {
-                    window.open(app.url, '_blank');
-                }
+        window.handleAppClick = function(id, spinId) {
+            const app = window.appsList.find(a => a.id === id);
+            if (!app) return;
+
+            // Trigger the internal fast-spinning Moving LED
+            const spinEl = document.getElementById(spinId);
+            if (spinEl) {
+                spinEl.style.opacity = '1';
+                
+                setTimeout(() => {
+                    spinEl.style.opacity = '0';
+                    if (app.locked) {
+                        window.showToast("ئەم بەشە لەلایەن ئەدمینەوە داخراوە | Locked by Admin");
+                    } else {
+                        window.open(app.url, '_blank');
+                    }
+                }, 800); // 800ms wait while it spins fast
             }
         }
 
-        function toggleAppLock(id) {
-            const appIndex = appsList.findIndex(a => a.id === id);
+        window.toggleAppLock = function(id) {
+            const appIndex = window.appsList.findIndex(a => a.id === id);
             if (appIndex !== -1) {
-                appsList[appIndex].locked = !appsList[appIndex].locked;
-                saveAppsDatabase();
-                filterApps();
-                renderAdminTable();
-                showToast(appsList[appIndex].locked ? "پۆرتاڵەکە داخرا | Portal Locked" : "پۆرتاڵەکە کرایەوە | Portal Unlocked");
+                window.appsList[appIndex].locked = !window.appsList[appIndex].locked;
+                window.saveAppsDatabase(); 
+                window.filterApps();
+                window.renderAdminTable();
+                window.showToast(window.appsList[appIndex].locked ? "پۆرتاڵەکە داخرا | Portal Locked globally" : "پۆرتاڵەکە کرایەوە | Portal Unlocked globally");
             }
         }
 
-        // --- Custom Admin Control Logic ---
-        function toggleAdminPanel() {
-            if (isAdminUnlocked) {
+        window.toggleAdminPanel = function() {
+            if (window.isAdminUnlocked) {
                 const panel = document.getElementById('adminPanel');
                 panel.classList.toggle('hidden');
-                if(!panel.classList.contains('hidden')) {
-                    panel.scrollIntoView({ behavior: 'smooth' });
-                }
+                if(!panel.classList.contains('hidden')) panel.scrollIntoView({ behavior: 'smooth' });
             } else {
                 document.getElementById('pinModal').classList.replace('hidden', 'flex');
                 document.getElementById('adminPinInput').focus();
             }
         }
 
-        function closePinModal() {
+        window.closePinModal = function() {
             document.getElementById('pinModal').classList.replace('flex', 'hidden');
             document.getElementById('adminPinInput').value = '';
         }
 
-        async function verifyAdminPin() {
+        window.verifyAdminPin = function() {
             const entered = document.getElementById('adminPinInput').value;
-            
-            if (!fetchedAdminPin) {
-                await fetchAdminPin();
-            }
-            
-            const checkPin = fetchedAdminPin || "English2026@";
-            
-            if (entered === checkPin) {
-                isAdminUnlocked = true;
-                showToast("سیستم ڕێکخستن بە سەرکەوتوویی کرایەوە");
+            if (entered === "English2026@") {
+                window.isAdminUnlocked = true;
+                window.showToast("سیستم ڕێکخستن بە سەرکەوتوویی کرایەوە");
                 document.getElementById('adminBtn').classList.add('bg-emerald-500/10', 'text-emerald-500');
-                const lockIcon = document.getElementById('adminLockIcon');
-                lockIcon.setAttribute('data-lucide', 'unlock');
-                closePinModal();
-                renderAdminTable();
+                document.getElementById('adminLockIcon').setAttribute('data-lucide', 'unlock');
+                window.closePinModal();
+                window.renderAdminTable();
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
                 lucide.createIcons();
             } else {
-                showToast("تێپەڕەوشەی هەڵە! دووبارە تاقیبکەرەوە.");
+                window.showToast("تێپەڕەوشەی هەڵە! دووبارە تاقیبکەرەوە.");
             }
         }
 
-        function lockAdminMode() {
-            isAdminUnlocked = false;
+        window.lockAdminMode = function() {
+            window.isAdminUnlocked = false;
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('adminBtn').classList.remove('bg-emerald-500/10', 'text-emerald-500');
             document.getElementById('adminLockIcon').setAttribute('data-lucide', 'lock');
-            showToast("دۆخی ڕێکخستن داخرا.");
+            window.showToast("دۆخی ڕێکخستن داخرا.");
             lucide.createIcons();
         }
 
-        function renderAdminTable() {
+        window.renderAdminTable = function() {
             const tbody = document.getElementById('adminAppsList');
             tbody.innerHTML = '';
-            appsList.forEach(app => {
+            window.appsList.forEach(app => {
                 const isLocked = app.locked || false;
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40">
-                        <td class="p-3">
-                            <div class="font-bold text-slate-800 dark:text-white">${app.titleEn}</div>
-                            <div class="text-[10px] text-slate-500 font-kurdish text-right" dir="rtl">${app.titleKu}</div>
-                        </td>
+                        <td class="p-3"><div class="font-bold text-slate-800 dark:text-white">${app.titleEn}</div><div class="text-[10px] text-slate-500 font-kurdish text-right" dir="rtl">${app.titleKu}</div></td>
                         <td class="p-3 text-slate-500 truncate max-w-xs font-mono text-xs">${app.url}</td>
                         <td class="p-3 text-center">
-                            <button onclick="toggleAppLock(${app.id})" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 mx-auto ${isLocked ? 'bg-rose-500 text-white hover:bg-rose-600' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'}">
-                                <i data-lucide="${isLocked ? 'lock' : 'unlock'}" class="w-3.5 h-3.5"></i>
-                                <span>${isLocked ? 'Locked' : 'Unlocked'}</span>
+                            <button onclick="window.toggleAppLock(${app.id})" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 mx-auto ${isLocked ? 'bg-rose-500 text-white hover:bg-rose-600' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'}">
+                                <i data-lucide="${isLocked ? 'lock' : 'unlock'}" class="w-3.5 h-3.5"></i> <span>${isLocked ? 'Locked' : 'Unlocked'}</span>
                             </button>
                         </td>
                         <td class="p-3 text-center">
-                            <button onclick="openEditModal(${app.id})" class="px-3 py-1 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg transition-all">
-                                Edit Route
-                            </button>
+                            <button onclick="window.openEditModal(${app.id})" class="px-3 py-1 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg transition-all">Edit Route</button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
             lucide.createIcons();
         }
 
-        function openEditModal(id) {
-            const app = appsList.find(a => a.id === id);
+        window.openEditModal = function(id) {
+            const app = window.appsList.find(a => a.id === id);
             if (!app) return;
-            editingAppId = id;
+            window.editingAppId = id;
             document.getElementById('editTitleEn').value = app.titleEn;
             document.getElementById('editTitleKu').value = app.titleKu;
             document.getElementById('editUrl').value = app.url;
             document.getElementById('editModal').classList.replace('hidden', 'flex');
         }
 
-        function closeEditModal() {
+        window.closeEditModal = function() {
             document.getElementById('editModal').classList.replace('flex', 'hidden');
-            editingAppId = null;
+            window.editingAppId = null;
         }
 
-        function saveAppChanges() {
-            const appIndex = appsList.findIndex(a => a.id === editingAppId);
+        window.saveAppChanges = function() {
+            const appIndex = window.appsList.findIndex(a => a.id === window.editingAppId);
             if (appIndex !== -1) {
-                appsList[appIndex].titleEn = document.getElementById('editTitleEn').value;
-                appsList[appIndex].titleKu = document.getElementById('editTitleKu').value;
-                appsList[appIndex].url = document.getElementById('editUrl').value;
-                saveAppsDatabase();
-                filterApps();
-                renderAdminTable();
-                closeEditModal();
-                showToast("گۆڕانکارییەکان بە سەرکەوتوویی پاشەکەوت کران");
+                window.appsList[appIndex].titleEn = document.getElementById('editTitleEn').value;
+                window.appsList[appIndex].titleKu = document.getElementById('editTitleKu').value;
+                window.appsList[appIndex].url = document.getElementById('editUrl').value;
+                window.saveAppsDatabase();
+                window.filterApps();
+                window.renderAdminTable();
+                window.closeEditModal();
+                window.showToast("گۆڕانکارییەکان بە سەرکەوتوویی پاشەکەوت کران");
             }
         }
 
-        function resetToDefaults() {
-            if (confirm("Are you sure you want to reset all custom links back to default?")) {
-                appsList = [...defaultApps];
-                saveAppsDatabase();
-                filterApps();
-                renderAdminTable();
-                showToast("بە سەرکەوتوویی گەڕێنرایەوە بۆ پۆرتاڵە بنەڕەتییەکان");
+        window.resetToDefaults = function() {
+            if (confirm("Are you sure you want to reset all custom links and cloud data back to default?")) {
+                window.appsList = [...window.defaultApps];
+                window.saveAppsDatabase();
+                window.filterApps();
+                window.renderAdminTable();
+                window.showToast("بە سەرکەوتوویی گەڕێنرایەوە بۆ پۆرتاڵە بنەڕەتییەکان");
             }
         }
 
-        // --- Theme Handlers ---
-        function toggleTheme() {
+        window.toggleTheme = function() {
             if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
+                document.documentElement.classList.remove('dark'); localStorage.theme = 'light';
+            } else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; }
         }
-
-        function initTheme() {
+        window.initTheme = function() {
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+            } else { document.documentElement.classList.remove('dark'); }
         }
 
         let toastTimer;
-        function showToast(msg) {
+        window.showToast = function(msg) {
             const t = document.getElementById('toast'); 
             document.getElementById('toast-msg').innerText = msg;
             t.classList.remove('hidden', 'animate-pop'); 
             void t.offsetWidth; 
             t.classList.add('flex', 'animate-pop');
             clearTimeout(toastTimer); 
-            toastTimer = setTimeout(() => { 
-                t.classList.add('hidden'); 
-                t.classList.remove('flex'); 
-            }, 2000);
-        }
-
-        // PWA Installation Prompter Setup
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            const installBtn = document.getElementById('pwaInstallBtn');
-            if (installBtn) {
-                installBtn.classList.remove('hidden');
-            }
-        });
-
-        function installPWA() {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    showToast("داونڵۆدکردن دەستیپێکرد | Starting Install...");
-                }
-                deferredPrompt = null;
-                const installBtn = document.getElementById('pwaInstallBtn');
-                if (installBtn) {
-                    installBtn.classList.add('hidden');
-                }
-            });
-        }
-
-        window.addEventListener('appinstalled', (evt) => {
-            const installBtn = document.getElementById('pwaInstallBtn');
-            if (installBtn) {
-                installBtn.classList.add('hidden');
-            }
-            showToast("بەرنامەکە بە سەرکەوتوویی جێگیرکرا | App Installed Successfully!");
-        });
-
-        function registerServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('Service Worker registered:', reg.scope))
-                    .catch(err => console.log('Service Worker registration failed:', err));
-            }
+            toastTimer = setTimeout(() => { t.classList.add('hidden'); t.classList.remove('flex'); }, 3000);
         }
     </script>
 </body>
