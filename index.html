@@ -424,18 +424,21 @@
             { id: 2, titleEn: "Research Library", titleKu: "کتێبخانەی توێژینەوە", icon: "library", url: "https://english-uor.github.io/Library/", theme: "emerald", locked: false },
             { id: 4, titleEn: "Holidays & Occasions", titleKu: "پشوو و بۆنەکان", icon: "calendar-days", url: "holidays.html", theme: "rose", locked: false },
             { id: 5, titleEn: "ECTS Calculator", titleKu: "هەژمارکەری ECTS", icon: "calculator", url: "https://english-uor.github.io/ECTS-Calculator/", theme: "amber", locked: false },
-            { id: 6, titleEn: "Schedules & Exams", titleKu: "خشتە و تاقیکردنیەوەکان", icon: "file-text", url: "https://english-uor.github.io/schedule-calendar-exam/", theme: "cyan", locked: false }
+            { id: 6, titleEn: "Schedules & Exams", titleKu: "خشتە و تاقیکردنیەوەکان", icon: "file-text", url: "https://english-uor.github.io/schedule-calendar-exam/", theme: "cyan", locked: false },
+            { id: 7, titleEn: "AI Tools", titleKu: "ئامرازەکانی ژیری دەستکرد", icon: "bot", url: "https://english-uor.github.io/AI/", theme: "purple", locked: false },
+            { id: 8, titleEn: "Teacher Availability", titleKu: "کاتی بەردەستبوونی مامۆستایان", icon: "calendar-clock", url: "https://english-uor.github.io/availability-time/student.html", theme: "violet", locked: false }
         ];
 
         // Unique deep backgrounds and vibrant borders for the Apps
         const gridThemes = {
-            rose: { bg: "bg-rose-950", border: "bg-rose-500", glow: "#e11d48", text: "text-rose-100", subtext: "text-rose-300", iconText: "text-rose-400", iconBg: "bg-rose-900/60" },
-            slate: { bg: "bg-slate-900", border: "bg-slate-500", glow: "#64748b", text: "text-slate-100", subtext: "text-slate-300", iconText: "text-slate-400", iconBg: "bg-slate-800/60" },
-            emerald: { bg: "bg-emerald-950", border: "bg-emerald-500", glow: "#10b981", text: "text-emerald-100", subtext: "text-emerald-300", iconText: "text-emerald-400", iconBg: "bg-emerald-900/60" },
-            amber: { bg: "bg-amber-950", border: "bg-amber-500", glow: "#f59e0b", text: "text-amber-100", subtext: "text-amber-300", iconText: "text-amber-400", iconBg: "bg-amber-900/60" },
-            purple: { bg: "bg-purple-950", border: "bg-purple-500", glow: "#a855f7", text: "text-purple-100", subtext: "text-purple-300", iconText: "text-purple-400", iconBg: "bg-purple-900/60" },
-            cyan: { bg: "bg-cyan-950", border: "bg-cyan-500", glow: "#06b6d4", text: "text-cyan-100", subtext: "text-cyan-300", iconText: "text-cyan-400", iconBg: "bg-cyan-900/60" },
-            indigo: { bg: "bg-indigo-950", border: "bg-indigo-500", glow: "#6366f1", text: "text-indigo-100", subtext: "text-indigo-300", iconText: "text-indigo-400", iconBg: "bg-indigo-900/60" }
+            rose: { bg: "bg-rose-50", border: "bg-rose-500", glow: "#e11d48", text: "text-rose-900", subtext: "text-rose-600", iconText: "text-rose-600", iconBg: "bg-rose-100" },
+            slate: { bg: "bg-slate-50", border: "bg-slate-500", glow: "#64748b", text: "text-slate-900", subtext: "text-slate-600", iconText: "text-slate-600", iconBg: "bg-slate-100" },
+            emerald: { bg: "bg-emerald-50", border: "bg-emerald-500", glow: "#10b981", text: "text-emerald-900", subtext: "text-emerald-600", iconText: "text-emerald-600", iconBg: "bg-emerald-100" },
+            amber: { bg: "bg-amber-50", border: "bg-amber-500", glow: "#f59e0b", text: "text-amber-900", subtext: "text-amber-700", iconText: "text-amber-600", iconBg: "bg-amber-100" },
+            purple: { bg: "bg-purple-50", border: "bg-purple-500", glow: "#a855f7", text: "text-purple-900", subtext: "text-purple-600", iconText: "text-purple-600", iconBg: "bg-purple-100" },
+            cyan: { bg: "bg-cyan-50", border: "bg-cyan-500", glow: "#06b6d4", text: "text-cyan-900", subtext: "text-cyan-600", iconText: "text-cyan-600", iconBg: "bg-cyan-100" },
+            indigo: { bg: "bg-indigo-50", border: "bg-indigo-500", glow: "#6366f1", text: "text-indigo-900", subtext: "text-indigo-600", iconText: "text-indigo-600", iconBg: "bg-indigo-100" },
+            violet: { bg: "bg-violet-50", border: "bg-violet-500", glow: "#8b5cf6", text: "text-violet-900", subtext: "text-violet-600", iconText: "text-violet-600", iconBg: "bg-violet-100" }
         };
 
         let appsList = [];
@@ -557,7 +560,7 @@
             container.innerHTML = '';
             
             if (currentView === 'grid') {
-                container.className = 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 w-full relative z-20';
+                container.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full relative z-20';
             } else {
                 container.className = 'grid grid-cols-1 md:grid-cols-2 gap-3 w-full relative z-20';
             }
@@ -814,7 +817,10 @@
         }
 
         function initTheme() {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            // Default to light mode. Dark mode now only turns on if the
+            // user has explicitly picked it before via the toggle button —
+            // it no longer follows the device/browser's dark-mode setting.
+            if (localStorage.theme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');
